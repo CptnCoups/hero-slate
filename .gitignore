@@ -37,3 +37,6 @@ pnpm-debug.log*
 # Python
 __pycache__/
 *.pyc
+
+# nix-direnv cache
+.direnv/

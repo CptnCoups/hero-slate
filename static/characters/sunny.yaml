@@ -52,7 +52,7 @@ pools:
   - id: spell-slots-4
     label: 4th Level
     color: ocean
-    max: 3
+    max: 1
   - id: wild-shape
     label: Wild Shape
     color: forest

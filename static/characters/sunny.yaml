@@ -11,17 +11,17 @@ color: forest
 # "+2") to show a sign on a combat number.
 abilities:
   - label: Strength
-    value: 10
+    value: 8
   - label: Dexterity
     value: 14
   - label: Constitution
     value: 14
   - label: Intelligence
-    value: 10
-  - label: Wisdom
-    value: 18
-  - label: Charisma
     value: 12
+  - label: Wisdom
+    value: 20
+  - label: Charisma
+    value: 10
 combat:
   - label: Armor Class
     value: 15
@@ -63,13 +63,13 @@ sections:
     color: forest
     rows:
     - title: 👀 Spotting Things
-      body: noticing what others miss, [[+6]] bonus
+      body: noticing what others miss, [[+8]] bonus
     - title: 🐾 Animal Friends
-      body: calming & handling animals, [[+6]] bonus
+      body: calming & handling animals, [[+8]] bonus
     - title: 🤫 Sneaking
       body: moving quietly & hiding, [[+5]] bonus
     - title: 🌿 Forest Lore
-      body: learn about plants, beasts, & the wild, [[+3]] bonus
+      body: learn about plants, beasts, & the wild, [[+9]] bonus
 
   - title: Your Turn
     color: berry
@@ -77,8 +77,10 @@ sections:
       - title: Attack
         body: "Wild Shape claws: [[d20+6]] to hit, [[2d6+4]] damage"
       - title: Cast a Spell
-        body: "Cast a prepared spell — spell attack [[d20+7]], [[2d6+4]] damage, save [[DC 15]]"
+        body: "Cast a prepared spell — spell attack [[d20+8]], [[2d6+4]] damage, save [[DC 16]]"
       - title: Shapeshift
-        body: "Transform into an animal — Wolf, Bear, Horse, or Cat. You can do this 2 times before a rest, and you don't even have to roll."
+        body: "Use a Wild Shape to transform into an animal — Wolf, Bear, Horse, or Cat."
+      - title: Land's Aid
+        body: "Use a Wild Shape to make the forest erupt. Pick a spot and roll [[2d6]] — that number is how much damage the enemies take and how much your friend heals (enemies must pass [[DC16 Con]])."
       - title: Help
-        body: Heal a friend for [[2d8 + 3]]) — or boost the team [[+d4]], make enemies easy to hit, and more).
+        body: Heal a friend for [[2d8 + 5]]) — or boost the team [[+d4]], make enemies easy to hit, and more).

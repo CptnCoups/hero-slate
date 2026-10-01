@@ -1,5 +1,5 @@
 name: Urven, the Silent Maw
-level: 6
+level: 7
 class: Monk
 color: neutral
 
@@ -25,7 +25,7 @@ combat:
     value: "+5"
 
 hitPoints:
-  max: 54
+  max: 67
 
 pools:
   - id: focus_points

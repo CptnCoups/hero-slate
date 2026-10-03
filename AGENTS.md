@@ -113,8 +113,13 @@ between phases" step.
   rejected PR is just closed and its branch deleted; `main` stays clean.
 - **Every story is an issue.** Its body is the story packet; propose reads it and
   names the issue in `proposal.md`. The story's PR says `Closes #<issue>`, so merging
-  closes it. An epic is a parent issue with its stories as sub-issues; close the
-  epic once all its sub-issues are closed. Dependencies are "blocked by" links.
+  closes it. An epic is a parent issue, labeled `kind/epic`, with its stories as
+  sub-issues; close the epic once all its sub-issues are closed. Dependencies are
+  "blocked by" links.
+- **Every story carries one MoSCoW priority label:** `priority/must`,
+  `priority/should`, `priority/could`, or `priority/wont`. The label matches the
+  `MoSCoW` line in the story packet; when you change one, change the other in the same
+  edit. Epics and untriaged issues have no priority label.
 
 ## Writing document artifacts — plain language
 

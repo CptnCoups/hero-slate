@@ -72,21 +72,11 @@ work; treat those specific errors as noise until `@types/node` is added.
 
 ## Workflow
 
-- Planning uses **OpenSpec**: in-flight work lives under `openspec/changes/`;
-  durable specs under `openspec/specs/`; decision records under `docs/decisions/`. Use
-  the `opsx:*` skills (propose → apply → verify → archive). OpenSpec changes carry
-  product behavior. Repo maintenance (tooling, docs, backlog housekeeping) goes
-  through an ordinary branch and PR with Conventional Commits.
-- **Toolchain is per stack.** v0.10.x: Node 20+, npm, Vite/React, Hono, Drizzle —
-  gate with **`npm run check`** (TypeScript) after every change to `apps/`/`packages/`.
-  v2: cargo workspace under `backend/`, orchestrated by the root `justfile` — gate with
-  **`just check`** (fmt + clippy `-D warnings` + tests + arch-boundary lint) after every
-  change to `backend/`. Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`,
-  `test:`).
-- **Releases are tag-driven** — bump `package.json`, add a `CHANGELOG.md` entry, then
-  push a `v*.*.*` tag; the workflow does the rest. Never `gh release create` manually.
-
-### OpenSpec git workflow
+Planning uses **OpenSpec**: in-flight work lives under `openspec/changes/`;
+durable specs under `openspec/specs/`; decision records under `docs/decisions/`. Use
+the `opsx:*` skills (propose → apply → verify → archive). OpenSpec changes carry
+product behavior. Repo maintenance (tooling, docs, backlog housekeeping) goes
+through an ordinary branch and PR with Conventional Commits.
 
 One branch and one pull request carry a change through its whole lifecycle —
 propose, apply, verify, archive — and merge once. There is no "cross `main`

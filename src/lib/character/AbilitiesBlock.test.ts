@@ -64,3 +64,29 @@ describe('AbilitiesBlock', () => {
 		expect(container.querySelector('img')).toBeNull();
 	});
 });
+
+describe('AbilitiesBlock: rolling', () => {
+	it('rolls a check from the modifier and a skill from the dropdown', async () => {
+		const { fireEvent } = await import('@testing-library/svelte');
+		const { roller } = await import('$lib/dice/roller.svelte');
+		roller.clear();
+		render(AbilitiesBlock, {
+			props: { abilities: [{ label: 'Strength', value: 20, skills: [{ name: 'Athletics', bonus: 8, proficient: true }] }] }
+		});
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Roll Strength check, d20+5' }));
+		expect(roller.latest?.label).toBe('Strength check');
+		expect(roller.latest?.modifier).toBe(5);
+
+		expect(screen.queryByRole('button', { name: /Athletics/ })).toBeNull();
+		await fireEvent.click(screen.getByRole('button', { name: 'Strength save and skills' }));
+		await fireEvent.click(screen.getByRole('button', { name: 'Roll Athletics, d20+8' }));
+		expect(roller.latest?.label).toBe('Athletics');
+		expect(roller.latest?.modifier).toBe(8);
+	});
+
+	it('shows no dropdown for a stat with no save or skills', () => {
+		render(AbilitiesBlock, { props: { abilities: [{ label: 'Constitution', value: 14 }] } });
+		expect(screen.queryByRole('button', { name: /save and skills/ })).toBeNull();
+	});
+});

@@ -79,3 +79,27 @@ describe('resolveAbilities', () => {
 		expect(() => resolveAbilities('nonsense' as unknown)).not.toThrow();
 	});
 });
+
+describe('resolveAbilities: saves and skills', () => {
+	it('reads a signed save and the skills under a stat', () => {
+		const [strength] = resolveAbilities([
+			{
+				label: 'Strength',
+				value: 20,
+				save: '+5',
+				skills: [{ name: 'Athletics', bonus: 8, proficient: true }, { name: 'Broken' }, 'nope', { name: 'Shove', bonus: -1 }]
+			}
+		]);
+		expect(strength.save).toBe('+5');
+		expect(strength.skills).toEqual([
+			{ name: 'Athletics', bonus: '+8', proficient: true },
+			{ name: 'Shove', bonus: '-1', proficient: false }
+		]);
+	});
+
+	it('leaves the save empty and skills empty when not authored', () => {
+		const [wisdom] = resolveAbilities([{ label: 'Wisdom', value: 10, save: 'lots' }]);
+		expect(wisdom.save).toBeNull();
+		expect(wisdom.skills).toEqual([]);
+	});
+});

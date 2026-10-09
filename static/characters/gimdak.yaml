@@ -3,19 +3,44 @@ level: 7
 class: Paladin
 color: sun
 
+# Each stat lists its skills (bonuses from D&D Beyond) under a ▾ on the sheet.
+# A stat can also take `save: "+N"` for its saving throw.
 abilities:
   - label: Strength
     value: 20
+    skills:
+      - { name: Athletics, bonus: 8, proficient: true }
   - label: Dexterity
     value: 14
+    skills:
+      - { name: Acrobatics, bonus: 2 }
+      - { name: Sleight of Hand, bonus: 2 }
+      - { name: Stealth, bonus: 2 }
   - label: Constitution
     value: 14
   - label: Intelligence
     value: 11
+    skills:
+      - { name: Arcana, bonus: 0 }
+      - { name: History, bonus: 0 }
+      - { name: Investigation, bonus: 0 }
+      - { name: Nature, bonus: 0 }
+      - { name: Religion, bonus: 0 }
   - label: Wisdom
     value: 10
+    skills:
+      - { name: Medicine, bonus: 3, proficient: true }
+      - { name: Animal Handling, bonus: 0 }
+      - { name: Insight, bonus: 0 }
+      - { name: Perception, bonus: 0 }
+      - { name: Survival, bonus: 0 }
   - label: Charisma
     value: 16
+    skills:
+      - { name: Intimidation, bonus: 6, proficient: true }
+      - { name: Persuasion, bonus: 6, proficient: true }
+      - { name: Deception, bonus: 3 }
+      - { name: Performance, bonus: 3 }
 combat:
   - label: Armor Class
     value: 20
@@ -107,11 +132,19 @@ sections:
     color: neutral
     rows:
       - title: 🧲 Stay Close
-        body: "Friends near you are better at resisting danger. Keep your friends close, and don't chase enemies far away."
+        body: "Your holy aura helps friends standing near you shrug off dragon breath, fireballs, and scary spells. Keeping two or three friends close is your most important job — even more than swinging your hammer. Don't chase enemies far away."
+      - title: 🎯 First Turn
+        body: "Use Champion Challenge on a fast enemy, or one running at your weaker friends. It keeps them stuck near you."
+      - title: 💡 Which Bonus Action?
+        body: "Challenge first. Turn the Tide when two or more friends are badly hurt. Lay On Hands to heal. Smite only after you've already hit and the fight is going okay."
+      - title: 🤔 Which Reaction?
+        body: "Sentinel when an enemy attacks a tough friend. Interception when they attack your wizard or another weak friend. Divine Allegiance only to stop a friend from falling down."
       - title: 🧱 Be the Wall
-        body: "Challenge enemies, then stand next to your friends. Sentinel stops anyone who tries to get past, and Interception blocks what gets through."
+        body: "Stand next to your weakest friend. Challenge the enemies, Sentinel stops anyone who tries to get past, and Interception blocks what gets through. You're not the big hitter — you're the wall."
       - title: 🌅 Before the Fight
-        body: "Cast Warding Bond on a strong friend who is fully healed."
+        body: "Cast Aid after every long rest. Cast Warding Bond on a strong friend who is fully healed, and end it if you start getting badly hurt."
+      - title: ⚠️ Be Careful
+        body: "Warding Bond and Divine Allegiance both make you take hits for friends. Use only one of them per fight, and heal yourself with Lay On Hands."
 
   - title: Strengths
     color: forest

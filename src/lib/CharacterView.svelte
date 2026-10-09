@@ -16,6 +16,7 @@
 	import { PoolCounts } from '$lib/character/poolCounts.svelte';
 	import { resolveLinks } from '$lib/character/links';
 	import AppHeader from '$lib/AppHeader.svelte';
+	import DiceTray from '$lib/dice/DiceTray.svelte';
 
 	type ViewState = GetCharacterResult | { status: 'loading' };
 
@@ -96,6 +97,7 @@
 				<LinksBlock links={result.character.links} palette={resolvePalette(result.character.color)} />
 			</div>
 		{/if}
+		<DiceTray />
 	</article>
 {:else if result.status === 'error'}
 	<p>Could not load this character. Try again.</p>

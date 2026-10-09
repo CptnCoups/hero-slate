@@ -21,7 +21,7 @@
 				<span class="spell-level">{spell.level === 0 ? 'cantrip' : ordinal(spell.level)}</span>
 			</div>
 			{#if spell.body}
-				<span class="spell-body"><RichText nodes={parse(spell.body)} /></span>
+				<span class="spell-body"><RichText nodes={parse(spell.body)} label={spell.title} /></span>
 			{/if}
 			{#if options.length > 0 && counts}
 				<div class="cast" role="group" aria-label={`Cast ${spell.title}`}>

@@ -72,12 +72,19 @@ describe('RichText: pill rendering', () => {
 		expect(span?.getAttribute('data-flavor')).toBe('dice');
 	});
 
-	it('pill is not interactive (no button or link)', () => {
+	it('a rollable pill is a roll button, never a link', () => {
 		const { container } = render(RichText, {
 			props: { nodes: [pill('dice', 'd20+6')] }
 		});
-		expect(container.querySelector('button')).toBeNull();
+		expect(container.querySelector('button[data-rollable]')).toBeTruthy();
 		expect(container.querySelector('a')).toBeNull();
+	});
+
+	it('a pill that is not a roll stays plain text', () => {
+		const { container } = render(RichText, {
+			props: { nodes: [pill('dice', 'DC 14')] }
+		});
+		expect(container.querySelector('button')).toBeNull();
 	});
 });
 

@@ -23,14 +23,16 @@
 					{#each section.rows as row}
 						{#if row.breakout === 'spells' && castable.length > 0}
 							<li class="breakout" data-palette={row.palette}>
-								<button type="button" class="row toggle" aria-expanded={open} onclick={() => (open = !open)}>
-									{#if row.title}
-										<span class="row-title">{row.title} <span class="chevron" aria-hidden="true">{open ? '▴' : '▾'}</span></span>
-									{/if}
+								<!-- Only the title toggles: the body holds roll buttons, which
+								     can't sit inside another button. -->
+								<div class="row">
+									<button type="button" class="row-title toggle" aria-expanded={open} onclick={() => (open = !open)}>
+										{row.title ?? 'Spells'} <span class="chevron" aria-hidden="true">{open ? '▴' : '▾'}</span>
+									</button>
 									<span class="row-body">
-										<RichText nodes={parse(row.body)} />
+										<RichText nodes={parse(row.body)} label={row.title} />
 									</span>
-								</button>
+								</div>
 								{#if open}
 									<SpellBreakout spells={castable} {counts} />
 								{/if}
@@ -41,7 +43,7 @@
 									<span class="row-title">{row.title}</span>
 								{/if}
 								<span class="row-body">
-									<RichText nodes={parse(row.body)} />
+									<RichText nodes={parse(row.body)} label={row.title} />
 								</span>
 							</li>
 						{/if}
@@ -103,21 +105,19 @@
 		font-size: 1rem;
 	}
 
-	/* The Cast a Spell row: the whole row is the toggle, the list opens under it. */
+	/* The Cast a Spell row: its title is the toggle, the list opens under it. */
 	.breakout {
 		display: grid;
 		gap: var(--space-3);
 	}
 
+	/* Keeps .row-title's font; only strips the button chrome. */
 	.toggle {
-		inline-size: 100%;
-		padding: var(--space-2);
-		margin: calc(-1 * var(--space-2));
+		padding: var(--space-1) var(--space-2);
+		margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2));
 		border: 0;
 		border-radius: var(--radius-m, 0.5rem);
 		background: none;
-		color: inherit;
-		font: inherit;
 		text-align: start;
 		cursor: pointer;
 	}

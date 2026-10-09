@@ -149,14 +149,14 @@ describe('CharacterView: sheet block order', () => {
 	it('renders a full character in the fixed order', () => {
 		const { container } = render(CharacterView, { props: { result: { status: 'found', character: full } } });
 
-		expect(blockOrder(container)).toEqual(['header', 'abilities', 'combat', 'hit-points', 'pools', 'sections']);
+		expect(blockOrder(container)).toEqual(['header', 'abilities', 'combat', 'hit-points', 'pools', 'sections', 'dice']);
 	});
 
 	it('keeps the remaining blocks in order when the hit points tracker is missing', () => {
 		const character: Character = { ...full, hitPoints: undefined };
 		const { container } = render(CharacterView, { props: { result: { status: 'found', character } } });
 
-		expect(blockOrder(container)).toEqual(['header', 'abilities', 'combat', 'pools', 'sections']);
+		expect(blockOrder(container)).toEqual(['header', 'abilities', 'combat', 'pools', 'sections', 'dice']);
 		expect(container.querySelector('[aria-label="Hit points"]')).toBeNull();
 	});
 
@@ -188,7 +188,8 @@ describe('CharacterView: links group', () => {
 			'hit-points',
 			'pools',
 			'sections',
-			'links'
+			'links',
+			'dice'
 		]);
 	});
 

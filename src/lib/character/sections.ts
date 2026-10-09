@@ -5,6 +5,8 @@ export interface ResolvedRow {
 	title?: string;
 	body: string;
 	palette: PaletteName;
+	/** `'spells'` makes the row open the spell breakout. */
+	breakout?: 'spells';
 }
 
 export interface ResolvedSection {
@@ -34,6 +36,7 @@ function resolveRows(rows: unknown, sectionPalette: PaletteName): ResolvedRow[] 
 		const title = ownString(row, 'title');
 		const resolved: ResolvedRow = { body, palette };
 		if (title && title.length > 0) resolved.title = title;
+		if (ownString(row, 'breakout') === 'spells') resolved.breakout = 'spells';
 		return [resolved];
 	});
 }

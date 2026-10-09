@@ -74,7 +74,8 @@ sections:
       - title: 🔥 Fire Breath
         body: "Breathe dragon fire! Enemies make a [[DC 13]] Dexterity save or take [[2d10]] damage"
       - title: ✨ Cast a Spell
-        body: "Pick a spell from Magic — spell attack [[d20+6]], save [[DC 14]]"
+        body: "Tap to pick a spell — spell attack [[d20+6]], save [[DC 14]]"
+        breakout: spells
 
   - title: Bonus Action
     color: sun
@@ -112,22 +113,6 @@ sections:
       - title: 🌅 Before the Fight
         body: "Cast Warding Bond on a strong friend who is fully healed."
 
-  - title: Magic
-    color: berry
-    rows:
-      - title: 🗣️ Command
-        body: "Give a one-word order like \"Drop!\" or \"Flee!\" — they make a [[DC 14]] Wisdom save"
-      - title: ⚡ Divine Smite
-        body: "When you hit, add [[2d8]] holy damage"
-      - title: 🤝 Warding Bond
-        body: "Protect a friend by sharing their hurts."
-      - title: 🐴 Find Steed
-        body: "Summon a loyal mount to ride into battle."
-      - title: ⚔️ Compelled Duel
-        body: "Dare one enemy to fight only you — they make a [[DC 14]] Wisdom save"
-      - title: ⚖️ Zone of Truth
-        body: "Make an area where nobody can lie — they make a [[DC 14]] Charisma save"
-
   - title: Strengths
     color: forest
     rows:
@@ -137,3 +122,42 @@ sections:
         body: talking people around, nicely or scarily (Persuasion, Intimidation), [[+6]] bonus
       - title: 🩹 Field Medic
         body: patching up wounds (Medicine), [[+3]] bonus
+
+# Spells for the Cast a Spell breakout. `level` picks which slot pools
+# (slots-N, N >= level) each spell can use; `free` names a pool of free casts.
+spells:
+  - title: 🙏 Bless
+    level: 1
+    body: "Up to three friends add a bonus to their attacks and saves. Your best spell!"
+  - title: ⚡ Divine Smite
+    level: 1
+    free: divine-smite
+    body: "When you hit, add [[2d8]] holy damage"
+  - title: 💥 Thunderous Smite
+    level: 1
+    body: "Your next hit adds [[2d6]] thunder damage — they make a [[DC 14]] Strength save or get knocked down"
+  - title: 💖 Cure Wounds
+    level: 1
+    body: "Touch a friend to heal [[2d8+3]] hit points"
+  - title: 🗣️ Command
+    level: 1
+    body: "Give a one-word order like \"Drop!\" or \"Flee!\" — they make a [[DC 14]] Wisdom save"
+  - title: ⚔️ Compelled Duel
+    level: 1
+    body: "Dare one enemy to fight only you — they make a [[DC 14]] Wisdom save"
+  - title: 🌟 Aid
+    level: 2
+    body: "Cast it after a long rest: three friends get extra hit points all day."
+  - title: ✨ Lesser Restoration
+    level: 2
+    body: "Cure a friend who is poisoned, paralyzed, blinded, or deafened."
+  - title: 🤝 Warding Bond
+    level: 2
+    body: "Protect a friend by sharing their hurts."
+  - title: ⚖️ Zone of Truth
+    level: 2
+    body: "Make an area where nobody can lie — they make a [[DC 14]] Charisma save"
+  - title: 🐴 Find Steed
+    level: 2
+    free: find-steed
+    body: "Summon a loyal mount to ride into battle."

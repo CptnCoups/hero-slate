@@ -13,6 +13,7 @@
 	import { resolveCombat } from '$lib/character/combat';
 	import { resolveHitPoints } from '$lib/character/hitPoints';
 	import { resolvePools } from '$lib/character/pools';
+	import { PoolCounts } from '$lib/character/poolCounts.svelte';
 	import { resolveLinks } from '$lib/character/links';
 	import AppHeader from '$lib/AppHeader.svelte';
 
@@ -40,6 +41,11 @@
 	);
 	const hasHealth = $derived(character !== null && resolveHitPoints(character.hitPoints, storedHp) !== null);
 	const hasPools = $derived(character !== null && resolvePools(character.pools, storedPools).length > 0);
+	// One set of pool counts for the dots and the spell breakout, so a cast
+	// updates the dots.
+	const counts = $derived(
+		character !== null ? new PoolCounts(resolvePools(character.pools, storedPools), store, id) : undefined
+	);
 	const hasLinks = $derived(
 		character !== null && resolveLinks(character.links, resolvePalette(character.color)).length > 0
 	);
@@ -80,10 +86,10 @@
 		{#if hasPools}
 			<div class="group">
 				<h2 class="group-heading" data-group-heading>Pools</h2>
-				<ResourcePoolsBlock pools={result.character.pools} {storedPools} {store} {id} />
+				<ResourcePoolsBlock pools={result.character.pools} {storedPools} {store} {id} shared={counts} />
 			</div>
 		{/if}
-		<SectionsBlock sections={result.character.sections} />
+		<SectionsBlock sections={result.character.sections} spells={result.character.spells} {counts} />
 		{#if hasLinks}
 			<div class="group">
 				<h2 class="group-heading" data-group-heading>Links</h2>

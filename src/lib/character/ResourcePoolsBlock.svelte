@@ -3,30 +3,21 @@
 	import type { StateStore } from '$lib/state/store';
 	import { resolvePalette } from '$lib/theme/resolve';
 	import { resolvePools } from './pools';
+	import { PoolCounts } from './poolCounts.svelte';
 
-	let { pools, storedPools, store, id = '' }: { pools: unknown; storedPools: unknown; store?: StateStore; id?: string } = $props();
-	const resolved = untrack(() => resolvePools(pools, storedPools));
-	let counts = $state<Record<string, number>>(Object.fromEntries(resolved.map((pool) => [pool.id, pool.current])));
+	// `shared` lets the sheet hand in the counts the spell breakout also spends;
+	// without it the block keeps its own.
+	let {
+		pools,
+		storedPools,
+		store,
+		id = '',
+		shared = undefined
+	}: { pools: unknown; storedPools: unknown; store?: StateStore; id?: string; shared?: PoolCounts } = $props();
+	const counts = untrack(() => shared ?? new PoolCounts(resolvePools(pools, storedPools), store, id));
+	const resolved = counts.pools;
 
-	function snapshot(): Record<string, number> {
-		const next = Object.create(null) as Record<string, number>;
-		for (const pool of resolved) next[pool.id] = counts[pool.id];
-		return next;
-	}
-
-	function persist(): void {
-		store?.write(id, 'pools', snapshot()).catch(() => {});
-	}
-
-	function select(poolId: string, dot: number): void {
-		const current = counts[poolId];
-		const next = Object.assign(Object.create(null), counts) as Record<string, number>;
-		next[poolId] = dot <= current ? dot - 1 : dot;
-		counts = next;
-		persist();
-	}
-
-	onMount(() => persist());
+	onMount(() => counts.persist());
 </script>
 
 {#if resolved.length > 0}
@@ -34,14 +25,14 @@
 		{#each resolved as pool (pool.id)}
 			<div class="pool" data-palette={resolvePalette(pool.color)} data-pool-size={pool.max > 5 ? 'large' : 'small'}>
 				<h3>{pool.label}</h3>
-				<div class="dots" aria-label={`${pool.label}: ${counts[pool.id]} remaining`}>
+				<div class="dots" aria-label={`${pool.label}: ${counts.remaining(pool.id)} remaining`}>
 					{#each Array(pool.max) as _, index}
 						{@const dot = index + 1}
 						<button
 							type="button"
-							data-pool-dot={dot <= counts[pool.id] ? 'filled' : 'empty'}
+							data-pool-dot={dot <= counts.remaining(pool.id) ? 'filled' : 'empty'}
 							aria-label={`${pool.label}: ${dot} remaining`}
-							onclick={() => select(pool.id, dot)}
+							onclick={() => counts.select(pool.id, dot)}
 						></button>
 					{/each}
 				</div>

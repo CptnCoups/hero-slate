@@ -66,6 +66,7 @@
 							<button
 								type="button"
 								class="check save"
+								id={`save-${slug(opened.label)}`}
 								aria-label={`Roll ${opened.label} save, d20${opened.save}`}
 								onclick={() => roller.roll(opened.save!, `${opened.label} save`)}
 							>

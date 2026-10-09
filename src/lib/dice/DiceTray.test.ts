@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import DiceTray from './DiceTray.svelte';
 import ModeToggle from './ModeToggle.svelte';
+import DiceMenu from './DiceMenu.svelte';
 import RichText from '$lib/richtext/RichText.svelte';
 import { parse } from '$lib/richtext/parse';
 import { Roller, roller } from './roller.svelte';
@@ -53,6 +54,7 @@ describe('DiceTray', () => {
 	it('shows the latest roll and a CRITICAL! callout', async () => {
 		const dice = new Roller(() => {});
 		const random = vi.spyOn(Math, 'random').mockReturnValue(0.99);
+		render(DiceMenu, { props: { dice } });
 		render(DiceTray, { props: { dice } });
 
 		await fireEvent.click(screen.getByRole('button', { name: 'Dice tray' }));

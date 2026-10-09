@@ -11,6 +11,7 @@
 	import { resolveSpells } from '$lib/character/spells';
 	import { reveal, sheetUi, slug } from '$lib/sheetUi.svelte';
 	import ModeToggle from '$lib/dice/ModeToggle.svelte';
+	import DiceMenu from '$lib/dice/DiceMenu.svelte';
 
 	let { character }: { character: Character } = $props();
 
@@ -30,7 +31,15 @@
 		const abilities = resolveAbilities(character.abilities);
 		for (const a of abilities) {
 			list.push({ kind: 'Stat', title: a.label, detail: `${a.score ?? ''} ${a.modifier}`, id: `ability-${slug(a.label)}` });
-			if (a.save) list.push({ kind: 'Save', title: `${a.label} save`, detail: a.save, id: `save-${slug(a.label)}` });
+			if (a.save) {
+				list.push({
+					kind: 'Save',
+					title: `${a.label} save`,
+					detail: a.save,
+					id: `save-${slug(a.label)}`,
+					before: () => (sheetUi.openAbility = a.label)
+				});
+			}
 			for (const s of a.skills) {
 				list.push({
 					kind: 'Skill',
@@ -129,6 +138,7 @@
 			onkeydown={onKey}
 		/>
 		<ModeToggle />
+		<DiceMenu />
 	</div>
 	{#if query.trim()}
 		<ul id="sheet-search-results" class="results" role="listbox" aria-label="Search results">

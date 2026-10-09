@@ -17,7 +17,6 @@
 	import { resolveLinks } from '$lib/character/links';
 	import AppHeader from '$lib/AppHeader.svelte';
 	import DiceTray from '$lib/dice/DiceTray.svelte';
-	import SavesBlock from '$lib/character/SavesBlock.svelte';
 	import SheetSearch from '$lib/SheetSearch.svelte';
 	import Collapsible from '$lib/Collapsible.svelte';
 
@@ -43,7 +42,6 @@
 		character !== null &&
 			(resolveAbilities(character.abilities).length > 0 || resolveCombat(character.combat).length > 0)
 	);
-	const hasSaves = $derived(character !== null && resolveAbilities(character.abilities).some((a) => a.save !== null));
 	const hasSenses = $derived(character !== null && resolveCombat(character.senses).length > 0);
 	const hasHealth = $derived(character !== null && resolveHitPoints(character.hitPoints, storedHp) !== null);
 	const hasPools = $derived(character !== null && resolvePools(character.pools, storedPools).length > 0);
@@ -76,11 +74,6 @@
 			<Collapsible title="Stats">
 				<AbilitiesBlock abilities={result.character.abilities} />
 				<CombatBlock combat={result.character.combat} palette={result.character.color} />
-			</Collapsible>
-		{/if}
-		{#if hasSaves}
-			<Collapsible title="Saving Throws">
-				<SavesBlock abilities={result.character.abilities} />
 			</Collapsible>
 		{/if}
 		{#if hasSenses}

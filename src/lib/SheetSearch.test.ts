@@ -60,9 +60,13 @@ describe('SheetSearch', () => {
 	});
 });
 
-describe('Saving throws and senses', () => {
-	it('shows a save tile per stat with a save, and the senses', () => {
+describe('Saves and senses', () => {
+	it('keeps saves in the stat dropdown, with no separate saves area, and shows the senses', async () => {
+		sheetUi.openAbility = null;
 		render(CharacterView, { props: { result: { status: 'found', character }, id: 'gimdak' } });
+		expect(document.querySelector('[data-block="saves"]')).toBeNull();
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Charisma save and skills' }));
 		expect(screen.getByRole('button', { name: 'Roll Charisma save, d20+9' })).toBeTruthy();
 		expect(screen.getByRole('region', { name: 'Senses' }).textContent).toContain('60 ft');
 	});

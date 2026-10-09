@@ -1,20 +1,41 @@
 <script lang="ts">
 	// The 🎲 button on the search line and the menu it drops down: free dice, crit
-	// damage, sound, and recent rolls. The latest roll shows in the bar at the bottom.
+	// damage, sound, and recent rolls. Every roll pops its result out under the
+	// button for a few seconds (longer for a natural 20 or 1); tap it to close.
 	import { roller, type Roller } from './roller.svelte';
+	import RollResult from './RollResult.svelte';
 
 	let { dice = roller }: { dice?: Roller } = $props();
 
 	let open = $state(false);
+	let showing = $state(false);
 	const DIE_SIDES = [4, 6, 8, 10, 12, 20, 100];
+	const latest = $derived(dice.latest);
+
+	// Each new roll pops out, then hides itself.
+	$effect(() => {
+		const roll = latest;
+		if (!roll) return;
+		showing = true;
+		const timer = setTimeout(() => (showing = false), roll.critical || roll.fumble ? 8000 : 5000);
+		return () => clearTimeout(timer);
+	});
 </script>
 
 <div class="menu-anchor">
 	<button type="button" class="open" aria-expanded={open} aria-label="Dice tray" onclick={() => (open = !open)}>
 		🎲
 	</button>
+	{#if latest && showing && !open}
+		<button type="button" class="popout" aria-live="polite" aria-label="Close roll result" onclick={() => (showing = false)}>
+			<RollResult roll={latest} />
+		</button>
+	{/if}
 	{#if open}
 		<div class="panel" aria-label="Dice tray">
+			{#if latest}
+				<div class="latest" aria-live="polite"><RollResult roll={latest} /></div>
+			{/if}
 			<div class="controls">
 				<button type="button" class="switch" aria-pressed={dice.crit} onclick={() => (dice.crit = !dice.crit)}>
 					💥 Crit damage
@@ -65,6 +86,42 @@
 
 	.open[aria-expanded='true'] {
 		border-color: var(--foreground);
+	}
+
+	/* The roll result popping out under the 🎲, from the right edge. */
+	.popout {
+		position: absolute;
+		inset-inline-end: 0;
+		top: calc(100% + var(--space-2));
+		inline-size: min(22rem, calc(100vw - 2rem));
+		padding: var(--space-3);
+		border: 2px solid var(--structural);
+		border-radius: var(--radius-l);
+		background-color: var(--raised);
+		box-shadow: var(--shadow), 0 8px 24px rgb(0 0 0 / 0.3);
+		color: inherit;
+		font: inherit;
+		text-align: start;
+		cursor: pointer;
+		animation: drop 0.2s ease-out;
+	}
+
+	.latest {
+		padding-block-end: var(--space-3);
+		border-block-end: 1px solid var(--structural);
+	}
+
+	@keyframes drop {
+		from {
+			transform: translateY(-6px);
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.popout {
+			animation: none;
+		}
 	}
 
 	/* Drops down from the right edge, under the search line. */

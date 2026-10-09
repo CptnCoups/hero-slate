@@ -16,7 +16,6 @@
 	import { PoolCounts } from '$lib/character/poolCounts.svelte';
 	import { resolveLinks } from '$lib/character/links';
 	import AppHeader from '$lib/AppHeader.svelte';
-	import DiceTray from '$lib/dice/DiceTray.svelte';
 	import SheetSearch from '$lib/SheetSearch.svelte';
 	import Collapsible from '$lib/Collapsible.svelte';
 
@@ -68,17 +67,12 @@
 			palette={resolvePalette(result.character.color)}
 		/>
 		<!-- Blocks render in one fixed order: stats, hit points, pools, the
-		     authored sections, then the links. Each group heading sits directly
+		     authored sections, the links, then senses. Each group heading sits directly
 		     before its blocks. -->
 		{#if hasStats}
 			<Collapsible title="Stats">
 				<AbilitiesBlock abilities={result.character.abilities} />
 				<CombatBlock combat={result.character.combat} palette={result.character.color} />
-			</Collapsible>
-		{/if}
-		{#if hasSenses}
-			<Collapsible title="Senses">
-				<CombatBlock combat={result.character.senses} palette={result.character.color} name="Senses" block="senses" />
 			</Collapsible>
 		{/if}
 		{#if hasHealth}
@@ -102,7 +96,11 @@
 				<LinksBlock links={result.character.links} palette={resolvePalette(result.character.color)} />
 			</Collapsible>
 		{/if}
-		<DiceTray />
+		{#if hasSenses}
+			<Collapsible title="Senses">
+				<CombatBlock combat={result.character.senses} palette={result.character.color} name="Senses" block="senses" />
+			</Collapsible>
+		{/if}
 	</article>
 {:else if result.status === 'error'}
 	<p>Could not load this character. Try again.</p>

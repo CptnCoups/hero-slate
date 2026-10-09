@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
-import DiceTray from './DiceTray.svelte';
 import ModeToggle from './ModeToggle.svelte';
 import DiceMenu from './DiceMenu.svelte';
 import RichText from '$lib/richtext/RichText.svelte';
@@ -50,18 +49,22 @@ describe('Roller: fumble sound', () => {
 	});
 });
 
-describe('DiceTray', () => {
-	it('shows the latest roll and a CRITICAL! callout', async () => {
+describe('DiceMenu', () => {
+	it('pops the latest roll out under the dice button, with a CRITICAL! callout', async () => {
 		const dice = new Roller(() => {});
 		const random = vi.spyOn(Math, 'random').mockReturnValue(0.99);
 		render(DiceMenu, { props: { dice } });
-		render(DiceTray, { props: { dice } });
 
 		await fireEvent.click(screen.getByRole('button', { name: 'Dice tray' }));
 		await fireEvent.click(screen.getByRole('button', { name: 'Roll a d20' }));
 
 		expect(document.querySelector('[data-roll-total]')?.textContent).toBe('20');
 		expect(screen.getByText('CRITICAL!')).toBeTruthy();
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Dice tray' }));
+		expect(screen.getByRole('button', { name: 'Close roll result' }).textContent).toContain('CRITICAL!');
+		await fireEvent.click(screen.getByRole('button', { name: 'Close roll result' }));
+		expect(screen.queryByRole('button', { name: 'Close roll result' })).toBeNull();
 		random.mockRestore();
 	});
 

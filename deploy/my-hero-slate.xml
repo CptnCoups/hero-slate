@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>hero-slate</Name>
+  <Repository>nginx:1.27-alpine</Repository>
+  <Registry>https://hub.docker.com/_/nginx</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/CptnCoups/hero-slate</Support>
+  <Project>https://github.com/CptnCoups/hero-slate</Project>
+  <Overview>Hero Slate kid-friendly D&amp;D character sheets (Gimdak Steelward). Static SvelteKit build served by nginx. swag (host network) proxies gimdak.iamhome.cloud to 127.0.0.1:3500 behind Authentik forward auth (provider gimdak-forward-auth). The site files are published by deploy/deploy.sh in the hero-slate repo; no secrets.</Overview>
+  <Category>Productivity: Tools:</Category>
+  <WebUI/>
+  <Icon/>
+  <ExtraParams>-p 127.0.0.1:3500:80 --restart unless-stopped</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires>The swag proxy conf deploy/gimdak.subdomain.conf, and the Authentik application gimdak.</Requires>
+  <Config Name="Site files" Target="/usr/share/nginx/html" Default="/mnt/user/appdata/hero-slate/www" Mode="ro" Description="Static build published by deploy/deploy.sh. Rebuildable, no backup needed." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/hero-slate/www</Config>
+  <Config Name="nginx config" Target="/etc/nginx/conf.d/default.conf" Default="/mnt/user/appdata/hero-slate/conf/default.conf" Mode="ro" Description="deploy/nginx.conf from the repo: SPA fallback and cache headers." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/hero-slate/conf/default.conf</Config>
+</Container>

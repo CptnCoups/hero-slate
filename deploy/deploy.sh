@@ -16,7 +16,11 @@ ssh unraid "rm -rf $APPDATA/www.old && { [ ! -d $APPDATA/www ] || mv $APPDATA/ww
 if ssh unraid "docker inspect hero-slate >/dev/null 2>&1"; then
 	ssh unraid "docker restart hero-slate >/dev/null"
 else
-	ssh unraid "docker run -d --name hero-slate --restart unless-stopped \
+	# Matches the Unraid template deploy/my-hero-slate.xml (installed in
+	# /boot/config/plugins/dockerMan/templates-user/), so the Docker tab can edit it.
+	scp -q deploy/my-hero-slate.xml unraid:/boot/config/plugins/dockerMan/templates-user/my-hero-slate.xml
+	ssh unraid "docker run -d --name hero-slate --net=bridge --restart unless-stopped \
+		-l net.unraid.docker.managed=dockerman \
 		-p 127.0.0.1:3500:80 \
 		-v $APPDATA/www:/usr/share/nginx/html:ro \
 		-v $APPDATA/conf/default.conf:/etc/nginx/conf.d/default.conf:ro \

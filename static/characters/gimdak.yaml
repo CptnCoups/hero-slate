@@ -70,6 +70,8 @@ senses:
 
 hitPoints:
   max: 66
+  # A Hit Die on a short rest: Paladin d10 + Constitution bonus (+2).
+  hitDie: "d10+2"
 
 pools:
   - id: holy-power
@@ -108,15 +110,18 @@ pools:
     label: Free Find Steed
     color: neutral
     max: 1
+  - id: hit-dice
+    label: Hit Dice
+    color: ocean
+    max: 7
 
 sections:
   - title: Action
     color: fire
     rows:
-      - title: 🔨 Warhammer
-        body: "Smash! [[d20+8]] to hit, [[1d8+5]] damage — and you can push them back 10 feet"
-      - title: 🔥 Fire Breath
-        body: "Breathe dragon fire! Enemies make a [[DC 13]] Dexterity save or take [[2d10]] damage"
+      - title: ⚔️ Attack
+        body: "Tap to pick: Warhammer, Javelin, Fire Breath, or The Earth Shaker"
+        breakout: attacks
       - title: ✨ Cast a Spell
         body: "Tap to pick a spell — spell attack [[d20+6]], save [[DC 14]]"
         breakout: spells
@@ -224,3 +229,18 @@ spells:
     url: https://www.dndbeyond.com/spells/2618879-find-steed
     free: find-steed
     body: "Summon a loyal mount to ride into battle."
+
+# Attacks for the Attack breakout. Numbers come from D&D Beyond; `pool`
+# spends a use from that pool. The Earth Shaker DC follows the feat's own
+# formula: 8 + proficiency (3) + Strength bonus (5).
+attacks:
+  - title: 🔨 Warhammer
+    body: "Smash! [[d20+8]] to hit, [[1d8+5]] damage. Push: knock a hit enemy back 10 feet."
+  - title: 🎯 Javelin
+    body: "Throw it up to 30 feet (120 with a harder shot): [[d20+8]] to hit, [[1d6+5]] damage. Slow: a hit enemy moves 10 feet slower. You carry 6."
+  - title: 🔥 Fire Breath
+    pool: fire-breath
+    body: "Breathe dragon fire! Enemies make a [[DC 13]] Dexterity save or take [[2d10]] damage."
+  - title: 🌋 The Earth Shaker
+    pool: earth-shaker
+    body: "Slam your weapon into the ground. Everyone within 10 feet makes a [[DC 16]] Strength save or falls down, and the ground there becomes hard to walk on."

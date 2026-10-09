@@ -40,6 +40,30 @@ export class PoolCounts {
 		return true;
 	}
 
+	/**
+	 * Refill pools for a rest: a long rest refills every pool, a short rest only
+	 * the pools marked `reset: short`. Returns the labels of the pools it refilled.
+	 */
+	rest(kind: 'short' | 'long'): string[] {
+		const next = Object.assign(Object.create(null), this.counts) as Record<string, number>;
+		const refilled: string[] = [];
+		for (const pool of this.pools) {
+			if (kind === 'short' && pool.reset !== 'short') continue;
+			if (next[pool.id] !== pool.max) refilled.push(pool.label);
+			next[pool.id] = pool.max;
+		}
+		this.counts = next;
+		this.persist();
+		return refilled;
+	}
+
+	/** Give back up to `amount` uses, never past the pool's max. */
+	regain(poolId: string, amount: number): void {
+		const pool = this.pools.find((p) => p.id === poolId);
+		if (!pool) return;
+		this.#set(poolId, Math.min(pool.max, this.remaining(poolId) + amount));
+	}
+
 	persist(): void {
 		const snapshot = Object.create(null) as Record<string, number>;
 		for (const pool of this.pools) snapshot[pool.id] = this.counts[pool.id];

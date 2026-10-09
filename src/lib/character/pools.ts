@@ -7,6 +7,8 @@ export interface ResolvedPool {
 	color?: string;
 	max: number;
 	current: number;
+	/** Set when the pool refills on a short rest; every pool refills on a long rest. */
+	reset?: 'short';
 }
 
 export function resolvePools(pools: unknown, _stored: unknown): ResolvedPool[] {
@@ -16,7 +18,7 @@ export function resolvePools(pools: unknown, _stored: unknown): ResolvedPool[] {
 
 	return pools.flatMap((pool) => {
 		if (typeof pool !== 'object' || pool === null || Array.isArray(pool)) return [];
-		const { id, label, color, max } = pool as Record<string, unknown>;
+		const { id, label, color, max, reset } = pool as Record<string, unknown>;
 		if (typeof id !== 'string' || id.length === 0) return [];
 		if (typeof label !== 'string' || label.trim().length === 0) return [];
 		if (typeof max !== 'number' || !Number.isInteger(max) || max < 1 || max > MAX_POOL_DOTS) return [];
@@ -25,7 +27,9 @@ export function resolvePools(pools: unknown, _stored: unknown): ResolvedPool[] {
 		ids.add(id);
 		const value = stored !== null && Object.hasOwn(stored, id) ? stored[id] : undefined;
 		const current = typeof value === 'number' && Number.isInteger(value) ? Math.min(max, Math.max(0, value)) : max;
-		return [{ id, label, color, max, current }];
+		const resolved: ResolvedPool = { id, label, color, max, current };
+		if (reset === 'short') resolved.reset = 'short';
+		return [resolved];
 	});
 }
 

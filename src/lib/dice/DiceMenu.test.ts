@@ -76,6 +76,27 @@ describe('DiceMenu', () => {
 	});
 });
 
+describe('roll colors', () => {
+	it('marks an advantage roll green and a disadvantage roll red', async () => {
+		const dice = new Roller(() => {}, () => {});
+		const random = vi.spyOn(Math, 'random').mockReturnValue(0.5);
+		render(DiceMenu, { props: { dice } });
+
+		dice.mode = 'advantage';
+		dice.roll('d20+3');
+		await new Promise((r) => setTimeout(r, 0));
+		expect(document.querySelector('.popout')?.getAttribute('data-mode')).toBe('advantage');
+		expect(screen.getByText('ADV')).toBeTruthy();
+
+		dice.mode = 'disadvantage';
+		dice.roll('d20+3');
+		await new Promise((r) => setTimeout(r, 0));
+		expect(document.querySelector('.popout')?.getAttribute('data-mode')).toBe('disadvantage');
+		expect(screen.getByText('DIS')).toBeTruthy();
+		random.mockRestore();
+	});
+});
+
 describe('rollable pills', () => {
 	it('rolls a dice pill and leaves a DC pill as text', async () => {
 		roller.clear();

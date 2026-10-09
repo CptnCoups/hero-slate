@@ -149,7 +149,7 @@ describe('CharacterView: sheet block order', () => {
 	it('renders a full character in the fixed order', () => {
 		const { container } = render(CharacterView, { props: { result: { status: 'found', character: full } } });
 
-		expect(blockOrder(container)).toEqual(['search', 'header', 'abilities', 'combat', 'hit-points', 'pools', 'sections']);
+		expect(blockOrder(container)).toEqual(['search', 'header', 'abilities', 'combat', 'hit-points', 'rest', 'pools', 'sections']);
 	});
 
 	it('keeps the remaining blocks in order when the hit points tracker is missing', () => {
@@ -187,6 +187,7 @@ describe('CharacterView: links group', () => {
 			'abilities',
 			'combat',
 			'hit-points',
+			'rest',
 			'pools',
 			'sections',
 			'links'

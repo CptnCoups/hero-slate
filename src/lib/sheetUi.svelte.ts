@@ -1,5 +1,5 @@
 /**
- * What is open on the sheet: the Cast a Spell breakout and the stat whose save
+ * What is open on the sheet: the Cast a Spell and Attack breakouts, and the stat whose save
  * and skills are showing. Shared so search can open them before jumping to a
  * spell or a skill.
  */
@@ -17,6 +17,7 @@ function loadCollapsed(): Record<string, boolean> {
 
 export const sheetUi = $state({
 	spellsOpen: false,
+	attacksOpen: false,
 	openAbility: null as string | null,
 	/** Collapsed areas by key ("group-stats", "section-action"); this device remembers them. */
 	collapsed: loadCollapsed()

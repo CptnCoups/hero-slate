@@ -5,13 +5,34 @@
 	import SpellBreakout from './SpellBreakout.svelte';
 	import type { PoolCounts } from './poolCounts.svelte';
 	import { resolveSpells } from './spells';
+	import AttackBreakout from './AttackBreakout.svelte';
+	import { resolveAttacks } from './attacks';
 	import { setCollapsed, sheetUi, slug } from '$lib/sheetUi.svelte';
 
-	let { sections, spells = undefined, counts = undefined }: { sections: unknown; spells?: unknown; counts?: PoolCounts } =
-		$props();
+	let {
+		sections,
+		spells = undefined,
+		attacks = undefined,
+		counts = undefined
+	}: { sections: unknown; spells?: unknown; attacks?: unknown; counts?: PoolCounts } = $props();
 
 	const resolved = $derived(resolveSections(sections));
 	const castable = $derived(resolveSpells(spells));
+	const attackList = $derived(resolveAttacks(attacks));
+
+	// A breakout row opens only when it has something to list.
+	function hasBreakout(kind: 'spells' | 'attacks' | undefined): boolean {
+		return (kind === 'spells' && castable.length > 0) || (kind === 'attacks' && attackList.length > 0);
+	}
+
+	function isOpen(kind: 'spells' | 'attacks' | undefined): boolean {
+		return kind === 'spells' ? sheetUi.spellsOpen : sheetUi.attacksOpen;
+	}
+
+	function toggle(kind: 'spells' | 'attacks' | undefined): void {
+		if (kind === 'spells') sheetUi.spellsOpen = !sheetUi.spellsOpen;
+		else sheetUi.attacksOpen = !sheetUi.attacksOpen;
+	}
 </script>
 
 {#if resolved.length > 0}
@@ -27,20 +48,24 @@
 				</h2>
 				<ul class="rows" hidden={folded}>
 					{#each section.rows as row}
-						{#if row.breakout === 'spells' && castable.length > 0}
+						{#if hasBreakout(row.breakout)}
 							<li class="breakout" data-palette={row.palette} id={`row-${slug(section.title)}-${slug(row.title ?? row.body)}`}>
 								<!-- Only the title toggles: the body holds roll buttons, which
 								     can't sit inside another button. -->
 								<div class="row">
-									<button type="button" class="row-title toggle" aria-expanded={sheetUi.spellsOpen} onclick={() => (sheetUi.spellsOpen = !sheetUi.spellsOpen)}>
-										{row.title ?? 'Spells'} <span class="chevron" aria-hidden="true">{sheetUi.spellsOpen ? '▴' : '▾'}</span>
+									<button type="button" class="row-title toggle" aria-expanded={isOpen(row.breakout)} onclick={() => toggle(row.breakout)}>
+										{row.title ?? (row.breakout === 'spells' ? 'Spells' : 'Attacks')} <span class="chevron" aria-hidden="true">{isOpen(row.breakout) ? '▴' : '▾'}</span>
 									</button>
 									<span class="row-body">
 										<RichText nodes={parse(row.body)} label={row.title} />
 									</span>
 								</div>
-								{#if sheetUi.spellsOpen}
-									<SpellBreakout spells={castable} {counts} />
+								{#if isOpen(row.breakout)}
+									{#if row.breakout === 'spells'}
+										<SpellBreakout spells={castable} {counts} />
+									{:else}
+										<AttackBreakout attacks={attackList} {counts} />
+									{/if}
 								{/if}
 							</li>
 						{:else}

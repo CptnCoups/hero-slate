@@ -14,16 +14,22 @@
 	import type { StateStore } from '$lib/state/store';
 	import { ROLE_PALETTE } from '$lib/theme/roles';
 
+	import { HitPointsState } from './hitPointsState.svelte';
+
+	// `shared` lets the sheet hand in the hit points the rest controls also change;
+	// without it the tracker keeps its own.
 	let {
 		hitPoints,
 		storedCurrent,
 		store,
-		id = ''
+		id = '',
+		shared = undefined
 	}: {
 		hitPoints: unknown;
 		storedCurrent: unknown;
 		store?: StateStore;
 		id?: string;
+		shared?: HitPointsState;
 	} = $props();
 
 	// Resolve once per mount from the initial props. The route renders this only
@@ -37,24 +43,21 @@
 	const damage = [-5, -1];
 	const heal = [1, 5];
 
-	let current = $state(resolved?.current ?? 0);
-
-	const max = resolved?.max ?? 0;
+	const hp = untrack(() => shared ?? new HitPointsState(resolved?.current ?? 0, resolved?.max ?? 0, store, id));
+	const current = $derived(hp.current);
+	const max = hp.max;
 	const down = $derived(current === 0);
 
 	function label(amount: number): string {
 		return amount > 0 ? `+${amount}` : String(amount);
 	}
 
-	function persist(value: number): void {
-		// Interface writes fail quietly, but guard defensively so a rejection never
-		// surfaces as an unhandled error or blocks the on-screen change.
-		store?.write(id, 'hp', value).catch(() => {});
+	function persist(): void {
+		hp.persist();
 	}
 
 	function adjust(amount: number): void {
-		current = Math.min(max, Math.max(0, current + amount));
-		persist(current);
+		hp.adjust(amount);
 	}
 
 	onMount(() => {
@@ -68,7 +71,7 @@
 			Number.isInteger(storedCurrent) &&
 			storedCurrent !== resolved.current
 		) {
-			persist(resolved.current);
+			persist();
 		}
 	});
 </script>

@@ -14,6 +14,8 @@
 	import { resolveHitPoints } from '$lib/character/hitPoints';
 	import { resolvePools } from '$lib/character/pools';
 	import { PoolCounts } from '$lib/character/poolCounts.svelte';
+	import { HitPointsState } from '$lib/character/hitPointsState.svelte';
+	import RestControls from '$lib/character/RestControls.svelte';
 	import { resolveLinks } from '$lib/character/links';
 	import AppHeader from '$lib/AppHeader.svelte';
 	import SheetSearch from '$lib/SheetSearch.svelte';
@@ -49,6 +51,17 @@
 	const counts = $derived(
 		character !== null ? new PoolCounts(resolvePools(character.pools, storedPools), store, id) : undefined
 	);
+	// Shared hit points, so the rest controls and the tracker agree.
+	const hp = $derived.by(() => {
+		if (character === null) return undefined;
+		const resolved = resolveHitPoints(character.hitPoints, storedHp);
+		return resolved ? new HitPointsState(resolved.current, resolved.max, store, id) : undefined;
+	});
+	// The die a Hit Die rolls on a short rest, such as "d10+2", from `hitPoints.hitDie`.
+	const hitDie = $derived.by(() => {
+		const raw = character?.hitPoints as Record<string, unknown> | undefined;
+		return typeof raw?.hitDie === 'string' ? raw.hitDie : undefined;
+	});
 	const hasLinks = $derived(
 		character !== null && resolveLinks(character.links, resolvePalette(character.color)).length > 0
 	);
@@ -82,7 +95,11 @@
 					storedCurrent={storedHp}
 					{store}
 					{id}
+					shared={hp}
 				/>
+				{#if hp}
+					<RestControls {hp} {counts} {hitDie} />
+				{/if}
 			</Collapsible>
 		{/if}
 		{#if hasPools}
@@ -90,7 +107,12 @@
 				<ResourcePoolsBlock pools={result.character.pools} {storedPools} {store} {id} shared={counts} />
 			</Collapsible>
 		{/if}
-		<SectionsBlock sections={result.character.sections} spells={result.character.spells} {counts} />
+		<SectionsBlock
+			sections={result.character.sections}
+			spells={result.character.spells}
+			attacks={result.character.attacks}
+			{counts}
+		/>
 		{#if hasLinks}
 			<Collapsible title="Links">
 				<LinksBlock links={result.character.links} palette={resolvePalette(result.character.color)} />

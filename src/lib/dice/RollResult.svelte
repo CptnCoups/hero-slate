@@ -8,8 +8,11 @@
 </script>
 
 {#key roll.id}
-	<div class="result" class:crit={roll.critical} class:fumble={roll.fumble}>
+	<div class="result" class:crit={roll.critical} class:fumble={roll.fumble} data-mode={roll.mode}>
 		<span class="total" data-roll-total>{roll.total}</span>
+		{#if roll.mode !== 'normal'}
+			<span class="mode-badge">{roll.mode === 'advantage' ? 'ADV' : 'DIS'}</span>
+		{/if}
 		<span class="detail">
 			<span class="what">{roll.label ? `${roll.label}: ` : ''}{roll.expression}{modeNote}{roll.crit ? ' (crit)' : ''}</span>
 			<span class="dice-values">
@@ -30,6 +33,33 @@
 {/key}
 
 <style>
+	/* Advantage rolls are green and disadvantage rolls red, like the toggle. A
+	   natural 20 or 1 keeps its gold or red total on top of that. */
+	.result[data-mode='advantage'] .total {
+		color: #2f9e57;
+	}
+
+	.result[data-mode='disadvantage'] .total {
+		color: #c94a43;
+	}
+
+	.mode-badge {
+		padding: 0.1em 0.5em;
+		border-radius: 999px;
+		font-size: 0.6875rem;
+		font-weight: 800;
+		letter-spacing: 0.06em;
+		color: #fff;
+	}
+
+	.result[data-mode='advantage'] .mode-badge {
+		background-color: #2f9e57;
+	}
+
+	.result[data-mode='disadvantage'] .mode-badge {
+		background-color: #c94a43;
+	}
+
 	.result {
 		flex: 1;
 		display: flex;

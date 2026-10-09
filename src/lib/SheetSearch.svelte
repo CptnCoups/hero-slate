@@ -9,6 +9,7 @@
 	import { resolvePools } from '$lib/character/pools';
 	import { resolveSections } from '$lib/character/sections';
 	import { resolveSpells } from '$lib/character/spells';
+	import { resolveAttacks } from '$lib/character/attacks';
 	import { reveal, sheetUi, slug } from '$lib/sheetUi.svelte';
 	import ModeToggle from '$lib/dice/ModeToggle.svelte';
 	import DiceMenu from '$lib/dice/DiceMenu.svelte';
@@ -68,6 +69,15 @@
 					id: `row-${slug(section.title)}-${slug(row.title ?? row.body)}`
 				});
 			}
+		}
+		for (const attack of resolveAttacks(character.attacks)) {
+			list.push({
+				kind: 'Attack',
+				title: attack.title,
+				detail: plain(attack.body),
+				id: `attack-${slug(attack.title)}`,
+				before: () => (sheetUi.attacksOpen = true)
+			});
 		}
 		for (const spell of resolveSpells(character.spells)) {
 			list.push({

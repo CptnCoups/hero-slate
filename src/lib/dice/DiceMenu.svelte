@@ -27,7 +27,7 @@
 		🎲
 	</button>
 	{#if latest && showing && !open}
-		<button type="button" class="popout" aria-live="polite" aria-label="Close roll result" onclick={() => (showing = false)}>
+		<button type="button" class="popout" data-mode={latest.mode} aria-live="polite" aria-label="Close roll result" onclick={() => (showing = false)}>
 			<RollResult roll={latest} />
 		</button>
 	{/if}
@@ -104,6 +104,17 @@
 		text-align: start;
 		cursor: pointer;
 		animation: drop 0.2s ease-out;
+	}
+
+	/* The pop-out's border matches how the roll was made. */
+	.popout[data-mode='advantage'] {
+		border-color: #2f9e57;
+		box-shadow: 0 0 0 2px rgb(47 158 87 / 0.35), 0 8px 24px rgb(0 0 0 / 0.3);
+	}
+
+	.popout[data-mode='disadvantage'] {
+		border-color: #c94a43;
+		box-shadow: 0 0 0 2px rgb(201 74 67 / 0.35), 0 8px 24px rgb(0 0 0 / 0.3);
 	}
 
 	.latest {

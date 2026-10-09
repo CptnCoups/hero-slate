@@ -41,16 +41,22 @@ export class PoolCounts {
 	}
 
 	/**
-	 * Refill pools for a rest: a long rest refills every pool, a short rest only
-	 * the pools marked `reset: short`. Returns the labels of the pools it refilled.
+	 * Refill pools for a rest: a long rest refills every pool. A short rest
+	 * refills the pools marked `reset: short`, and gives back `shortRestRegain`
+	 * uses to pools that only partly refill. Returns what it gave back, such as
+	 * "Channel Divinity +1".
 	 */
 	rest(kind: 'short' | 'long'): string[] {
 		const next = Object.assign(Object.create(null), this.counts) as Record<string, number>;
 		const refilled: string[] = [];
 		for (const pool of this.pools) {
-			if (kind === 'short' && pool.reset !== 'short') continue;
-			if (next[pool.id] !== pool.max) refilled.push(pool.label);
-			next[pool.id] = pool.max;
+			const before = next[pool.id];
+			let after = before;
+			if (kind === 'long' || pool.reset === 'short') after = pool.max;
+			else if (pool.shortRestRegain) after = Math.min(pool.max, before + pool.shortRestRegain);
+			if (after === before) continue;
+			next[pool.id] = after;
+			refilled.push(after === pool.max && kind === 'long' ? pool.label : `${pool.label} +${after - before}`);
 		}
 		this.counts = next;
 		this.persist();

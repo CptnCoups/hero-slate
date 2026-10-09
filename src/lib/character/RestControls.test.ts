@@ -13,7 +13,8 @@ const character = {
 	hitPoints: { max: 66, hitDie: 'd10+2' },
 	pools: [
 		{ id: 'slots-1', label: 'Spell Slots (1st)', max: 4 },
-		{ id: 'channel', label: 'Channel Divinity', max: 2, reset: 'short' },
+		{ id: 'channel', label: 'Channel Divinity', max: 2, shortRestRegain: 1 },
+		{ id: 'second-wind', label: 'Second Wind', max: 1, reset: 'short' },
 		{ id: 'hit-dice', label: 'Hit Dice', max: 7 }
 	]
 };
@@ -43,15 +44,21 @@ describe('Rest controls', () => {
 		expect(state.write).toHaveBeenCalledWith('gimdak', 'hp', 66);
 	});
 
-	it('a short rest refills only short-rest pools', async () => {
-		renderSheet(20, { 'slots-1': 0, channel: 0, 'hit-dice': 7 });
+	it('a short rest gives back one Channel Divinity and refills short-rest pools only', async () => {
+		renderSheet(20, { 'slots-1': 0, channel: 0, 'second-wind': 0, 'hit-dice': 7 });
 
 		await fireEvent.click(screen.getByRole('button', { name: '🌙 Short Rest' }));
 		await fireEvent.click(screen.getByRole('button', { name: '✅ Finish short rest' }));
 
-		expect(remaining('Channel Divinity')).toBe('Channel Divinity: 2 remaining');
+		expect(remaining('Channel Divinity')).toBe('Channel Divinity: 1 remaining');
+		expect(remaining('Second Wind')).toBe('Second Wind: 1 remaining');
 		expect(remaining('Spell Slots (1st)')).toBe('Spell Slots (1st): 0 remaining');
-		expect(screen.getByText('Short rest done. Refilled: Channel Divinity.')).toBeTruthy();
+		expect(screen.getByText('Short rest done. Refilled: Channel Divinity +1, Second Wind +1.')).toBeTruthy();
+
+		// Another short rest gives back the second use.
+		await fireEvent.click(screen.getByRole('button', { name: '🌙 Short Rest' }));
+		await fireEvent.click(screen.getByRole('button', { name: '✅ Finish short rest' }));
+		expect(remaining('Channel Divinity')).toBe('Channel Divinity: 2 remaining');
 	});
 
 	it('spending a Hit Die heals by the roll and uses one die', async () => {

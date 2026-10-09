@@ -9,6 +9,8 @@ export interface ResolvedPool {
 	current: number;
 	/** Set when the pool refills on a short rest; every pool refills on a long rest. */
 	reset?: 'short';
+	/** Uses a short rest gives back when the pool only partly refills (Channel Divinity: 1). */
+	shortRestRegain?: number;
 }
 
 export function resolvePools(pools: unknown, _stored: unknown): ResolvedPool[] {
@@ -18,7 +20,7 @@ export function resolvePools(pools: unknown, _stored: unknown): ResolvedPool[] {
 
 	return pools.flatMap((pool) => {
 		if (typeof pool !== 'object' || pool === null || Array.isArray(pool)) return [];
-		const { id, label, color, max, reset } = pool as Record<string, unknown>;
+		const { id, label, color, max, reset, shortRestRegain } = pool as Record<string, unknown>;
 		if (typeof id !== 'string' || id.length === 0) return [];
 		if (typeof label !== 'string' || label.trim().length === 0) return [];
 		if (typeof max !== 'number' || !Number.isInteger(max) || max < 1 || max > MAX_POOL_DOTS) return [];
@@ -29,6 +31,9 @@ export function resolvePools(pools: unknown, _stored: unknown): ResolvedPool[] {
 		const current = typeof value === 'number' && Number.isInteger(value) ? Math.min(max, Math.max(0, value)) : max;
 		const resolved: ResolvedPool = { id, label, color, max, current };
 		if (reset === 'short') resolved.reset = 'short';
+		else if (typeof shortRestRegain === 'number' && Number.isInteger(shortRestRegain) && shortRestRegain > 0) {
+			resolved.shortRestRegain = shortRestRegain;
+		}
 		return [resolved];
 	});
 }

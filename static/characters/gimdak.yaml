@@ -78,6 +78,9 @@ pools:
     label: Holy Power
     color: sun
     max: 2
+    # Channel Divinity: one use back on a short rest, all on a long rest
+    # (2024 Paladin rule text on D&D Beyond).
+    shortRestRegain: 1
   - id: fire-breath
     label: Fire Breath
     color: fire

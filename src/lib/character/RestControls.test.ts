@@ -73,3 +73,29 @@ describe('Rest controls', () => {
 		random.mockRestore();
 	});
 });
+
+describe('Rows that spend a pool', () => {
+	it('a Use button on a row spends one use from its pool', async () => {
+		const { default: View } = await import('$lib/CharacterView.svelte');
+		const state = store();
+		render(View, {
+			props: {
+				result: {
+					status: 'found',
+					character: {
+						id: 'gimdak',
+						name: 'Gimdak',
+						pools: [{ id: 'holy-power', label: 'Holy Power', max: 2 }],
+						sections: [{ title: 'Bonus Action', rows: [{ title: 'Champion Challenge', body: 'Shout', pool: 'holy-power' }] }]
+					}
+				},
+				store: state,
+				id: 'gimdak'
+			}
+		});
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Use Champion Challenge from Holy Power (2 left)' }));
+		expect(remaining('Holy Power')).toBe('Holy Power: 1 remaining');
+		expect(state.write).toHaveBeenLastCalledWith('gimdak', 'pools', { 'holy-power': 1 });
+	});
+});

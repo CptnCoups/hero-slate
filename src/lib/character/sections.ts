@@ -7,6 +7,8 @@ export interface ResolvedRow {
 	palette: PaletteName;
 	/** Makes the row open a breakout: the spell list or the attack list. */
 	breakout?: 'spells' | 'attacks';
+	/** A pool the row spends one use of, through a Use button (Champion Challenge → Channel Divinity). */
+	pool?: string;
 }
 
 export interface ResolvedSection {
@@ -38,6 +40,8 @@ function resolveRows(rows: unknown, sectionPalette: PaletteName): ResolvedRow[] 
 		if (title && title.length > 0) resolved.title = title;
 		const breakout = ownString(row, 'breakout');
 		if (breakout === 'spells' || breakout === 'attacks') resolved.breakout = breakout;
+		const pool = ownString(row, 'pool');
+		if (pool) resolved.pool = pool;
 		return [resolved];
 	});
 }

@@ -75,6 +75,21 @@
 								{/if}
 								<span class="row-body">
 									<RichText nodes={parse(row.body)} label={row.title} />
+									{#if row.pool && counts?.has(row.pool)}
+										{@const left = counts.remaining(row.pool)}
+										{@const poolLabel = counts.pools.find((p) => p.id === row.pool)?.label ?? row.pool}
+										<span class="use">
+											<button
+												type="button"
+												disabled={left < 1}
+												aria-label={`Use ${row.title ?? 'this'} from ${poolLabel} (${left} left)`}
+												onclick={() => counts.spend(row.pool!)}
+											>
+												Use
+											</button>
+											<span class="left">{poolLabel}: {left} left</span>
+										</span>
+									{/if}
 								</span>
 							</li>
 						{/if}
@@ -193,6 +208,43 @@
 	.toggle:focus-visible {
 		outline: 3px solid var(--foreground);
 		outline-offset: 2px;
+	}
+
+	/* A row that spends a pool use: a small Use button and what is left. */
+	.use {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		margin-block-start: var(--space-2);
+	}
+
+	.use button {
+		min-inline-size: 3.5rem;
+		block-size: 2.75rem;
+		padding: 0 var(--space-3);
+		border-radius: 999px;
+		border: 3px solid var(--deep);
+		background-color: var(--tint);
+		color: var(--deep);
+		font-weight: 800;
+		cursor: pointer;
+	}
+
+	.use button:disabled {
+		background-color: transparent;
+		border-color: var(--structural);
+		color: var(--muted);
+		cursor: not-allowed;
+	}
+
+	.use button:focus-visible {
+		outline: 3px solid var(--foreground);
+		outline-offset: 2px;
+	}
+
+	.left {
+		font-size: 0.8125rem;
+		color: var(--muted);
 	}
 
 	.chevron {

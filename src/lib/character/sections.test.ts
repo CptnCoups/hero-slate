@@ -191,3 +191,10 @@ describe('resolveSections: row color', () => {
 		expect(sections[0].rows[0].palette).toBe('berry');
 	});
 });
+
+describe('resolveSections: row pools', () => {
+	it('keeps a pool a row spends', () => {
+		const [section] = resolveSections([{ title: 'Bonus Action', rows: [{ title: 'Challenge', body: 'Shout', pool: 'holy-power' }] }]);
+		expect(section.rows[0].pool).toBe('holy-power');
+	});
+});

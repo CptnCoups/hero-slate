@@ -135,13 +135,16 @@ sections:
       - title: 💡 Pick One
         body: "You only get one bonus action a turn, so choose wisely!"
       - title: 🛡️ Champion Challenge
-        body: "Your best first move! Shout a challenge so enemies can't run away from you to reach your friends."
+        body: "Uses 1 Holy Power. Shout a challenge: enemies within 30 feet make a [[DC 14]] Wisdom save or can't move more than 30 feet away from you. Your best first move!"
+        pool: holy-power
       - title: 🌊 Turn the Tide
-        body: "When two or more friends are badly hurt, heal all of them at once."
+        body: "Uses 1 Holy Power. When two or more friends are badly hurt, heal all of them at once."
+        pool: holy-power
       - title: 🙌 Lay On Hands
         body: "Touch a friend and heal them with holy light from your big healing pool."
       - title: 🐉 Dragon Wings
-        body: "Sprout dragon wings and fly!"
+        body: "Sprout dragon wings and fly for 10 minutes! Once per long rest."
+        pool: dragon-wings
 
   - title: Reaction
     color: ocean
@@ -153,7 +156,7 @@ sections:
       - title: 🤺 Interception
         body: "A friend next to you gets hit? Block it with your shield and they take [[1d10+3]] less damage."
       - title: 💛 Divine Allegiance
-        body: "Take a friend's hit yourself — only to stop them from falling down."
+        body: "A friend within 5 feet takes damage? Take the hit yourself instead, and nothing can lower it. Tip: save it for a hit that would knock a friend down."
 
   - title: Game Plan
     color: neutral

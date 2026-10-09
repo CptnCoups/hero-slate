@@ -127,7 +127,7 @@ palette color, and a pool id, and the Author confirms or changes them:
   (for example, `focus-points` for "Focus Points").
 - Propose `slots-N` for the spell-slot pool at level `N` (for example,
   `slots-1`), and `pact-slots` for the Pact Magic pool.
-- If a pool's maximum is above 12, tell the Author: the app shows at most 12
+- If a pool's maximum is above 100, tell the Author: the app shows at most 100
   dots and would drop that pool.
 
 ### 7. Recommend a Your Turn section

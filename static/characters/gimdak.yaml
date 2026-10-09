@@ -1,0 +1,103 @@
+name: Gimdak Steelward
+level: 7
+class: Paladin
+color: sun
+
+abilities:
+  - label: Strength
+    value: 20
+  - label: Dexterity
+    value: 14
+  - label: Constitution
+    value: 14
+  - label: Intelligence
+    value: 11
+  - label: Wisdom
+    value: 10
+  - label: Charisma
+    value: 16
+combat:
+  - label: Armor Class
+    value: 20
+  - label: Speed
+    value: 30
+  - label: Initiative
+    value: "+2"
+
+hitPoints:
+  max: 66
+
+pools:
+  - id: holy-power
+    label: Holy Power
+    color: sun
+    max: 2
+  - id: fire-breath
+    label: Fire Breath
+    color: fire
+    max: 3
+  - id: dragon-wings
+    label: Dragon Wings
+    color: ocean
+    max: 1
+  - id: earth-shaker
+    label: Earth Shaker
+    color: forest
+    max: 3
+  - id: slots-1
+    label: Spell Slots (1st)
+    color: berry
+    max: 4
+  - id: slots-2
+    label: Spell Slots (2nd)
+    color: berry
+    max: 3
+  - id: lay-on-hands
+    label: Lay On Hands
+    color: sun
+    max: 35
+  - id: divine-smite
+    label: Free Divine Smite
+    color: sun
+    max: 1
+  - id: find-steed
+    label: Free Find Steed
+    color: neutral
+    max: 1
+
+sections:
+  - title: Your Turn
+    color: fire
+    rows:
+      - title: 🔨 Warhammer
+        body: "Smash! [[d20+8]] to hit, [[1d8+5]] damage"
+      - title: 🔥 Fire Breath
+        body: "Breathe dragon fire! Enemies make a [[DC 13]] Dexterity save or take [[2d10]] damage"
+      - title: ✨ Cast a Spell
+        body: "Pick a spell from Magic — spell attack [[d20+6]], save [[DC 14]]"
+      - title: 🙌 Lay On Hands
+        body: "Bonus action: touch a friend and heal them with holy light."
+      - title: 🛡️ Champion Challenge
+        body: "Bonus action: shout a challenge so nearby enemies have to face you."
+
+  - title: Magic
+    color: berry
+    rows:
+      - title: 🗣️ Command
+        body: "Give a one-word order like \"Drop!\" or \"Flee!\" — they make a [[DC 14]] Wisdom save"
+      - title: ⚡ Divine Smite
+        body: "When you hit, add [[2d8]] holy damage"
+      - title: 🤝 Warding Bond
+        body: "Protect a friend by sharing their hurts."
+      - title: 🐴 Find Steed
+        body: "Summon a loyal mount to ride into battle."
+
+  - title: Strengths
+    color: forest
+    rows:
+      - title: 💪 Mighty Muscles
+        body: climbing, jumping & shoving (Athletics), [[+8]] bonus
+      - title: 👑 Royal Voice
+        body: talking people around, nicely or scarily (Persuasion, Intimidation), [[+6]] bonus
+      - title: 🩹 Field Medic
+        body: patching up wounds (Medicine), [[+3]] bonus

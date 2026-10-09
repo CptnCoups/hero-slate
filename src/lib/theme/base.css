@@ -51,3 +51,25 @@ h3 {
 	margin: 0 auto;
 	padding: var(--space-4) var(--space-4) var(--space-6);
 }
+
+/* Search jumps flash their target so the eye lands on it. */
+.search-flash {
+	animation: search-flash 1.6s ease-out;
+}
+
+@keyframes search-flash {
+	0%,
+	30% {
+		box-shadow: 0 0 0 4px var(--foreground);
+	}
+	100% {
+		box-shadow: 0 0 0 4px transparent;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.search-flash {
+		animation: none;
+		outline: 4px solid var(--foreground);
+	}
+}

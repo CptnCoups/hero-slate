@@ -57,3 +57,61 @@ export function playCritical(): void {
 		// No speech on this device.
 	}
 }
+
+/**
+ * The natural-1 "wa wa waaaa": a sad trombone of three falling notes and a long
+ * wobbling last one, from a filtered sawtooth. Generated on the device.
+ */
+export function playFumble(): void {
+	try {
+		const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+		if (!Ctx) return;
+		const ctx = new Ctx();
+		const start = ctx.currentTime + 0.05;
+
+		const filter = ctx.createBiquadFilter();
+		filter.type = 'lowpass';
+		filter.frequency.value = 1100;
+		filter.Q.value = 4;
+		const master = ctx.createGain();
+		master.gain.value = 0.35;
+		filter.connect(master).connect(ctx.destination);
+
+		// Each note slides down a little at its end, like a trombone slide.
+		const notes: { freq: number; at: number; length: number }[] = [
+			{ freq: 293.66, at: 0, length: 0.4 },
+			{ freq: 277.18, at: 0.45, length: 0.4 },
+			{ freq: 261.63, at: 0.9, length: 0.4 },
+			{ freq: 246.94, at: 1.35, length: 1.3 }
+		];
+		for (const [i, note] of notes.entries()) {
+			const osc = ctx.createOscillator();
+			const gain = ctx.createGain();
+			const t = start + note.at;
+			const last = i === notes.length - 1;
+			osc.type = 'sawtooth';
+			osc.frequency.setValueAtTime(note.freq, t);
+			osc.frequency.linearRampToValueAtTime(note.freq * (last ? 0.94 : 0.97), t + note.length);
+			if (last) {
+				// The "waaaa" wobble.
+				const lfo = ctx.createOscillator();
+				const depth = ctx.createGain();
+				lfo.frequency.value = 6;
+				depth.gain.value = 6;
+				lfo.connect(depth).connect(osc.frequency);
+				lfo.start(t);
+				lfo.stop(t + note.length);
+			}
+			gain.gain.setValueAtTime(0.0001, t);
+			gain.gain.exponentialRampToValueAtTime(1, t + 0.05);
+			gain.gain.setValueAtTime(1, t + note.length - 0.12);
+			gain.gain.exponentialRampToValueAtTime(0.0001, t + note.length);
+			osc.connect(gain).connect(filter);
+			osc.start(t);
+			osc.stop(t + note.length + 0.02);
+		}
+		setTimeout(() => ctx.close().catch(() => {}), 3200);
+	} catch {
+		// No audio on this device.
+	}
+}

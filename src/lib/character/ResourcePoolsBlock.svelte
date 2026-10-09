@@ -23,7 +23,7 @@
 {#if resolved.length > 0}
 	<section class="resource-pools" aria-label="Resource pools" data-block="pools">
 		{#each resolved as pool (pool.id)}
-			<div class="pool" data-palette={resolvePalette(pool.color)} data-pool-size={pool.max > 5 ? 'large' : 'small'}>
+			<div class="pool" id={`pool-${pool.id}`} data-palette={resolvePalette(pool.color)} data-pool-size={pool.max > 5 ? 'large' : 'small'}>
 				<h3>{pool.label}</h3>
 				<div class="dots" aria-label={`${pool.label}: ${counts.remaining(pool.id)} remaining`}>
 					{#each Array(pool.max) as _, index}

@@ -10,16 +10,17 @@
 	import { resolveAbilities, type ResolvedAbility } from './abilities';
 	import { isRollable } from '$lib/dice/roll';
 	import { roller } from '$lib/dice/roller.svelte';
+	import { sheetUi, slug } from '$lib/sheetUi.svelte';
 
 	let { abilities }: { abilities: unknown } = $props();
 
 	const entries: ResolvedAbility[] = $derived(resolveAbilities(abilities));
-	// One stat's save and skills show at a time, in a full-width panel under the tiles.
-	let openLabel = $state<string | null>(null);
-	const opened = $derived(entries.find((entry) => entry.label === openLabel) ?? null);
+	// One stat's save and skills show at a time, in a full-width panel under the
+	// tiles; search can open one too.
+	const opened = $derived(entries.find((entry) => entry.label === sheetUi.openAbility) ?? null);
 
 	function toggle(label: string): void {
-		openLabel = openLabel === label ? null : label;
+		sheetUi.openAbility = sheetUi.openAbility === label ? null : label;
 	}
 </script>
 
@@ -27,29 +28,32 @@
 	<section class="abilities" aria-label="Abilities" data-block="abilities">
 		{#each entries as entry}
 			{@const hasMore = entry.save !== null || entry.skills.length > 0}
-			<div class="ability" class:expanded={openLabel === entry.label}>
+			<div class="ability" id={`ability-${slug(entry.label)}`} class:expanded={sheetUi.openAbility === entry.label}>
 				<span class="label">{entry.label}</span>
+				<!-- The score is the big number; the modifier sits under it and rolls.
+				     With no score, the modifier takes the big slot. -->
+				{#if entry.score !== null}
+					<span class="score">{entry.score}</span>
+				{/if}
 				{#if isRollable(entry.modifier)}
 					<button
 						type="button"
 						class="modifier roll"
+						class:big={entry.score === null}
 						aria-label={`Roll ${entry.label} check, d20${entry.modifier}`}
 						onclick={() => roller.roll(entry.modifier, `${entry.label} check`)}
 					>{entry.modifier}</button>
 				{:else}
-					<span class="modifier">{entry.modifier}</span>
-				{/if}
-				{#if entry.score !== null}
-					<span class="score">{entry.score}</span>
+					<span class="modifier" class:big={entry.score === null}>{entry.modifier}</span>
 				{/if}
 				{#if hasMore}
 					<button
 						type="button"
 						class="more"
-						aria-expanded={openLabel === entry.label}
+						aria-expanded={sheetUi.openAbility === entry.label}
 						aria-label={`${entry.label} save and skills`}
 						onclick={() => toggle(entry.label)}
-					>{openLabel === entry.label ? '▴' : '▾'}</button>
+					>{sheetUi.openAbility === entry.label ? '▴' : '▾'}</button>
 				{/if}
 			</div>
 		{/each}
@@ -74,6 +78,7 @@
 							<button
 								type="button"
 								class="check"
+								id={`skill-${slug(skill.name)}`}
 								class:proficient={skill.proficient}
 								aria-label={`Roll ${skill.name}, d20${skill.bonus}`}
 								onclick={() => roller.roll(skill.bonus, skill.name)}
@@ -119,11 +124,22 @@
 		color: var(--muted);
 	}
 
-	.modifier {
+	/* The score is the big number. */
+	.score,
+	.modifier.big {
 		font-family: var(--font-display);
 		font-size: 2.25rem;
 		font-weight: 800;
 		line-height: 1;
+		color: var(--deep);
+	}
+
+	/* The modifier under it: smaller, but still a clear tap target. */
+	.modifier {
+		min-block-size: 2rem;
+		font-family: var(--font-display);
+		font-size: 1.25rem;
+		font-weight: 800;
 		color: var(--deep);
 	}
 
@@ -147,12 +163,6 @@
 	.check:hover,
 	.more:hover {
 		background-color: color-mix(in srgb, var(--structural) 30%, transparent);
-	}
-
-	.score {
-		font-size: 0.875rem;
-		font-weight: 700;
-		color: var(--muted);
 	}
 
 	.more {

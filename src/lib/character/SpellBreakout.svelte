@@ -2,6 +2,7 @@
 	import RichText from '$lib/richtext/RichText.svelte';
 	import { parse } from '$lib/richtext/parse';
 	import type { PoolCounts } from './poolCounts.svelte';
+	import { slug } from '$lib/sheetUi.svelte';
 	import { castOptions, ordinal, type ResolvedSpell } from './spells';
 
 	// Every castable spell, each with one button per pool it can spend. A tap
@@ -15,7 +16,7 @@
 <ul class="spells" data-block="spells">
 	{#each spells as spell}
 		{@const options = castOptions(spell, poolIds)}
-		<li class="spell">
+		<li class="spell" id={`spell-${slug(spell.title)}`}>
 			<div class="spell-head">
 				<span class="spell-title">{spell.title}</span>
 				<span class="spell-level">{spell.level === 0 ? 'cantrip' : ordinal(spell.level)}</span>

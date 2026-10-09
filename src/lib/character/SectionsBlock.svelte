@@ -5,40 +5,46 @@
 	import SpellBreakout from './SpellBreakout.svelte';
 	import type { PoolCounts } from './poolCounts.svelte';
 	import { resolveSpells } from './spells';
+	import { setCollapsed, sheetUi, slug } from '$lib/sheetUi.svelte';
 
 	let { sections, spells = undefined, counts = undefined }: { sections: unknown; spells?: unknown; counts?: PoolCounts } =
 		$props();
 
 	const resolved = $derived(resolveSections(sections));
 	const castable = $derived(resolveSpells(spells));
-	let open = $state(false);
 </script>
 
 {#if resolved.length > 0}
 	<div class="sections" data-block="sections">
 		{#each resolved as section}
-			<section data-palette={section.palette}>
-				<h2 class="section-heading">{section.title}</h2>
-				<ul class="rows">
+			{@const key = `section-${slug(section.title)}`}
+			{@const folded = sheetUi.collapsed[key] === true}
+			<section data-palette={section.palette} id={key} data-collapse-key={key}>
+				<h2 class="section-heading">
+					<button type="button" class="fold" aria-expanded={!folded} onclick={() => setCollapsed(key, !folded)}>
+						{section.title}
+					</button>
+				</h2>
+				<ul class="rows" hidden={folded}>
 					{#each section.rows as row}
 						{#if row.breakout === 'spells' && castable.length > 0}
-							<li class="breakout" data-palette={row.palette}>
+							<li class="breakout" data-palette={row.palette} id={`row-${slug(section.title)}-${slug(row.title ?? row.body)}`}>
 								<!-- Only the title toggles: the body holds roll buttons, which
 								     can't sit inside another button. -->
 								<div class="row">
-									<button type="button" class="row-title toggle" aria-expanded={open} onclick={() => (open = !open)}>
-										{row.title ?? 'Spells'} <span class="chevron" aria-hidden="true">{open ? '▴' : '▾'}</span>
+									<button type="button" class="row-title toggle" aria-expanded={sheetUi.spellsOpen} onclick={() => (sheetUi.spellsOpen = !sheetUi.spellsOpen)}>
+										{row.title ?? 'Spells'} <span class="chevron" aria-hidden="true">{sheetUi.spellsOpen ? '▴' : '▾'}</span>
 									</button>
 									<span class="row-body">
 										<RichText nodes={parse(row.body)} label={row.title} />
 									</span>
 								</div>
-								{#if open}
+								{#if sheetUi.spellsOpen}
 									<SpellBreakout spells={castable} {counts} />
 								{/if}
 							</li>
 						{:else}
-							<li class="row" data-palette={row.palette}>
+							<li class="row" data-palette={row.palette} id={`row-${slug(section.title)}-${slug(row.title ?? row.body)}`}>
 								{#if row.title}
 									<span class="row-title">{row.title}</span>
 								{/if}
@@ -70,13 +76,46 @@
 
 	.section-heading {
 		margin: 0;
-		padding: var(--space-2) var(--space-4);
 		font-size: 1.125rem;
 		font-weight: 800;
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
 		background-color: var(--tint);
 		color: var(--deep);
+	}
+
+	/* The whole title strip folds the section; the chevron is drawn, not text. */
+	.fold {
+		inline-size: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: var(--space-2) var(--space-4);
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+		text-align: start;
+		cursor: pointer;
+	}
+
+	.fold::after {
+		content: '▾';
+	}
+
+	.fold[aria-expanded='false']::after {
+		content: '▸';
+	}
+
+	.fold:focus-visible {
+		outline: 3px solid var(--deep);
+		outline-offset: -3px;
+	}
+
+	.rows[hidden] {
+		display: none;
 	}
 
 	.rows {

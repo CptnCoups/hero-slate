@@ -149,14 +149,14 @@ describe('CharacterView: sheet block order', () => {
 	it('renders a full character in the fixed order', () => {
 		const { container } = render(CharacterView, { props: { result: { status: 'found', character: full } } });
 
-		expect(blockOrder(container)).toEqual(['header', 'abilities', 'combat', 'hit-points', 'pools', 'sections', 'dice']);
+		expect(blockOrder(container)).toEqual(['search', 'header', 'abilities', 'combat', 'hit-points', 'pools', 'sections', 'dice']);
 	});
 
 	it('keeps the remaining blocks in order when the hit points tracker is missing', () => {
 		const character: Character = { ...full, hitPoints: undefined };
 		const { container } = render(CharacterView, { props: { result: { status: 'found', character } } });
 
-		expect(blockOrder(container)).toEqual(['header', 'abilities', 'combat', 'pools', 'sections', 'dice']);
+		expect(blockOrder(container)).toEqual(['search', 'header', 'abilities', 'combat', 'pools', 'sections', 'dice']);
 		expect(container.querySelector('[aria-label="Hit points"]')).toBeNull();
 	});
 
@@ -182,6 +182,7 @@ describe('CharacterView: links group', () => {
 		const { container } = render(CharacterView, { props: { result: { status: 'found', character: fullWithLinks } } });
 
 		expect(blockOrder(container)).toEqual([
+			'search',
 			'header',
 			'abilities',
 			'combat',
@@ -201,7 +202,7 @@ describe('CharacterView: links group', () => {
 		const heading = [...container.querySelectorAll('[data-group-heading]')].find(
 			(h) => h.textContent?.trim() === 'Links'
 		) as HTMLElement;
-		expect(heading.nextElementSibling?.getAttribute('data-block')).toBe('links');
+		expect(heading.nextElementSibling?.firstElementChild?.getAttribute('data-block')).toBe('links');
 	});
 
 	it('shows no Links heading when links is missing', () => {
@@ -228,7 +229,7 @@ describe('CharacterView: group headings', () => {
 			const el = [...container.querySelectorAll('[data-group-heading]')].find(
 				(h) => h.textContent?.trim() === heading
 			) as HTMLElement;
-			return el.nextElementSibling?.getAttribute('data-block');
+			return el.nextElementSibling?.firstElementChild?.getAttribute('data-block');
 		};
 		expect(firstBlockAfter('Stats')).toBe('abilities');
 		expect(firstBlockAfter('Health')).toBe('hit-points');
@@ -248,12 +249,30 @@ describe('CharacterView: group headings', () => {
 
 		expect(groupHeadings(container)).toEqual(['Stats']);
 		const heading = container.querySelector('[data-group-heading]') as HTMLElement;
-		expect(heading.nextElementSibling?.getAttribute('data-block')).toBe('combat');
+		expect(heading.nextElementSibling?.firstElementChild?.getAttribute('data-block')).toBe('combat');
 	});
 
 	it('shows no group headings for a character with only a name', () => {
 		const { container } = render(CharacterView, { props: { result: { status: 'found', character: sunny } } });
 
 		expect(groupHeadings(container)).toEqual([]);
+	});
+});
+
+describe('CharacterView: collapsible groups', () => {
+	it('folds a group from its heading and unfolds it again', async () => {
+		const { fireEvent } = await import('@testing-library/svelte');
+		const { sheetUi } = await import('$lib/sheetUi.svelte');
+		sheetUi.collapsed = {};
+		const { container } = render(CharacterView, { props: { result: { status: 'found', character: full } } });
+
+		const heading = screen.getByRole('button', { name: 'Stats' });
+		expect(heading.getAttribute('aria-expanded')).toBe('true');
+		await fireEvent.click(heading);
+
+		expect(heading.getAttribute('aria-expanded')).toBe('false');
+		expect((container.querySelector('[data-block="abilities"]')?.parentElement as HTMLElement).hidden).toBe(true);
+		await fireEvent.click(heading);
+		expect(heading.getAttribute('aria-expanded')).toBe('true');
 	});
 });

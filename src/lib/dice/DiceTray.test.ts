@@ -28,6 +28,26 @@ describe('Roller', () => {
 	});
 });
 
+describe('Roller: fumble sound', () => {
+	it('plays the wa-wa sound on a natural 1, not the critical one', () => {
+		const critical = vi.fn();
+		const fumble = vi.fn();
+		const dice = new Roller(critical, fumble);
+		// An earlier test leaves the device's mute switch on.
+		dice.setMuted(false);
+		const random = vi.spyOn(Math, 'random').mockReturnValue(0);
+
+		dice.roll('d20+3');
+		expect(fumble).toHaveBeenCalledTimes(1);
+		expect(critical).not.toHaveBeenCalled();
+
+		// A 1 on a damage die is not a fumble.
+		dice.roll('1d8');
+		expect(fumble).toHaveBeenCalledTimes(1);
+		random.mockRestore();
+	});
+});
+
 describe('DiceTray', () => {
 	it('shows the latest roll and a CRITICAL! callout', async () => {
 		const dice = new Roller(() => {});
@@ -42,11 +62,10 @@ describe('DiceTray', () => {
 		random.mockRestore();
 	});
 
-	it('switches to advantage', async () => {
-		const dice = new Roller(() => {});
+	it('switches to advantage without opening the tray', async () => {
+		const dice = new Roller(() => {}, () => {});
 		render(DiceTray, { props: { dice } });
-		await fireEvent.click(screen.getByRole('button', { name: 'Dice tray' }));
-		await fireEvent.click(screen.getByRole('radio', { name: 'Adv.' }));
+		await fireEvent.click(screen.getByRole('radio', { name: '👍 Advantage' }));
 		expect(dice.mode).toBe('advantage');
 	});
 });

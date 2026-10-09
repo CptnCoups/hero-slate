@@ -17,6 +17,9 @@
 	import { resolveLinks } from '$lib/character/links';
 	import AppHeader from '$lib/AppHeader.svelte';
 	import DiceTray from '$lib/dice/DiceTray.svelte';
+	import SavesBlock from '$lib/character/SavesBlock.svelte';
+	import SheetSearch from '$lib/SheetSearch.svelte';
+	import Collapsible from '$lib/Collapsible.svelte';
 
 	type ViewState = GetCharacterResult | { status: 'loading' };
 
@@ -40,6 +43,8 @@
 		character !== null &&
 			(resolveAbilities(character.abilities).length > 0 || resolveCombat(character.combat).length > 0)
 	);
+	const hasSaves = $derived(character !== null && resolveAbilities(character.abilities).some((a) => a.save !== null));
+	const hasSenses = $derived(character !== null && resolveCombat(character.senses).length > 0);
 	const hasHealth = $derived(character !== null && resolveHitPoints(character.hitPoints, storedHp) !== null);
 	const hasPools = $derived(character !== null && resolvePools(character.pools, storedPools).length > 0);
 	// One set of pool counts for the dots and the spell breakout, so a cast
@@ -58,6 +63,7 @@
 	<!-- The sheet root carries the resolved palette; the CSS maps it to a single
 	     --accent / --on-accent for the active light or dark mode. -->
 	<article data-palette={resolvePalette(result.character.color)}>
+		<SheetSearch character={result.character} />
 		<AppHeader
 			title={result.character.name}
 			subtitle={formatIdentity(result.character) || undefined}
@@ -67,35 +73,41 @@
 		     authored sections, then the links. Each group heading sits directly
 		     before its blocks. -->
 		{#if hasStats}
-			<div class="group">
-				<h2 class="group-heading" data-group-heading>Stats</h2>
+			<Collapsible title="Stats">
 				<AbilitiesBlock abilities={result.character.abilities} />
 				<CombatBlock combat={result.character.combat} palette={result.character.color} />
-			</div>
+			</Collapsible>
+		{/if}
+		{#if hasSaves}
+			<Collapsible title="Saving Throws">
+				<SavesBlock abilities={result.character.abilities} />
+			</Collapsible>
+		{/if}
+		{#if hasSenses}
+			<Collapsible title="Senses">
+				<CombatBlock combat={result.character.senses} palette={result.character.color} name="Senses" block="senses" />
+			</Collapsible>
 		{/if}
 		{#if hasHealth}
-			<div class="group">
-				<h2 class="group-heading" data-group-heading>Health</h2>
+			<Collapsible title="Health">
 				<HitPointsBlock
 					hitPoints={result.character.hitPoints}
 					storedCurrent={storedHp}
 					{store}
 					{id}
 				/>
-			</div>
+			</Collapsible>
 		{/if}
 		{#if hasPools}
-			<div class="group">
-				<h2 class="group-heading" data-group-heading>Pools</h2>
+			<Collapsible title="Pools">
 				<ResourcePoolsBlock pools={result.character.pools} {storedPools} {store} {id} shared={counts} />
-			</div>
+			</Collapsible>
 		{/if}
 		<SectionsBlock sections={result.character.sections} spells={result.character.spells} {counts} />
 		{#if hasLinks}
-			<div class="group">
-				<h2 class="group-heading" data-group-heading>Links</h2>
+			<Collapsible title="Links">
 				<LinksBlock links={result.character.links} palette={resolvePalette(result.character.color)} />
-			</div>
+			</Collapsible>
 		{/if}
 		<DiceTray />
 	</article>
@@ -112,19 +124,4 @@
 		gap: var(--space-5);
 	}
 
-	.group {
-		display: grid;
-		gap: var(--space-3);
-	}
-
-	/* Fixed group labels: small, uppercase, in muted text. */
-	.group-heading {
-		margin: 0;
-		font-family: var(--font-body);
-		font-size: 0.8125rem;
-		font-weight: 800;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
 </style>

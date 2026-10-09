@@ -1,5 +1,5 @@
 import { roll, type Mode, type RollResult } from './roll';
-import { playCritical } from './sound';
+import { playCritical, playFumble } from './sound';
 
 export interface LoggedRoll extends RollResult {
 	id: number;
@@ -27,10 +27,12 @@ export class Roller {
 	muted = $state(readMuted());
 	history = $state<LoggedRoll[]>([]);
 	#next = 1;
-	#sound: () => void;
+	#critical: () => void;
+	#fumble: () => void;
 
-	constructor(sound: () => void = playCritical) {
-		this.#sound = sound;
+	constructor(critical: () => void = playCritical, fumble: () => void = playFumble) {
+		this.#critical = critical;
+		this.#fumble = fumble;
 	}
 
 	get latest(): LoggedRoll | undefined {
@@ -42,7 +44,10 @@ export class Roller {
 		if (!result) return null;
 		const logged: LoggedRoll = { ...result, id: this.#next++, label };
 		this.history = [logged, ...this.history].slice(0, HISTORY);
-		if (result.critical && !this.muted) this.#sound();
+		if (!this.muted) {
+			if (result.critical) this.#critical();
+			else if (result.fumble) this.#fumble();
+		}
 		return logged;
 	}
 

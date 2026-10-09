@@ -1,7 +1,8 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import CharacterView from '$lib/CharacterView.svelte';
 import type { StateStore } from '$lib/state/store';
+import { sheetUi } from '$lib/sheetUi.svelte';
 
 function store(): StateStore & { write: ReturnType<typeof vi.fn> } {
 	return { read: vi.fn().mockResolvedValue(undefined), write: vi.fn().mockResolvedValue(undefined) };
@@ -34,6 +35,11 @@ function renderSheet(state = store()) {
 }
 
 describe('Cast a Spell breakout', () => {
+	// The open/closed state is shared across the sheet, so start each test closed.
+	beforeEach(() => {
+		sheetUi.spellsOpen = false;
+	});
+
 	it('opens the spell list from the Cast a Spell row', async () => {
 		renderSheet();
 		expect(screen.queryByText('Bless')).toBeNull();

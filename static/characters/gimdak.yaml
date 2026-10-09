@@ -4,22 +4,27 @@ class: Paladin
 color: sun
 
 # Each stat lists its skills (bonuses from D&D Beyond) under a ▾ on the sheet.
-# A stat can also take `save: "+N"` for its saving throw.
+# Saves include Aura of Protection (+3, the Charisma bonus, on every save);
+# Wisdom and Charisma also add proficiency (+3).
 abilities:
   - label: Strength
     value: 20
+    save: "+8"
     skills:
       - { name: Athletics, bonus: 8, proficient: true }
   - label: Dexterity
     value: 14
+    save: "+5"
     skills:
       - { name: Acrobatics, bonus: 2 }
       - { name: Sleight of Hand, bonus: 2 }
       - { name: Stealth, bonus: 2 }
   - label: Constitution
     value: 14
+    save: "+5"
   - label: Intelligence
     value: 11
+    save: "+3"
     skills:
       - { name: Arcana, bonus: 0 }
       - { name: History, bonus: 0 }
@@ -28,6 +33,7 @@ abilities:
       - { name: Religion, bonus: 0 }
   - label: Wisdom
     value: 10
+    save: "+6"
     skills:
       - { name: Medicine, bonus: 3, proficient: true }
       - { name: Animal Handling, bonus: 0 }
@@ -36,6 +42,7 @@ abilities:
       - { name: Survival, bonus: 0 }
   - label: Charisma
     value: 16
+    save: "+9"
     skills:
       - { name: Intimidation, bonus: 6, proficient: true }
       - { name: Persuasion, bonus: 6, proficient: true }
@@ -48,6 +55,18 @@ combat:
     value: 30
   - label: Initiative
     value: "+2"
+
+# Senses from D&D Beyond: Dragonborn darkvision, and passive scores
+# (10 + the skill bonus, as D&D Beyond shows them).
+senses:
+  - label: Darkvision
+    value: "60 ft"
+  - label: Passive Perception
+    value: 10
+  - label: Passive Insight
+    value: 10
+  - label: Passive Investigation
+    value: 10
 
 hitPoints:
   max: 66

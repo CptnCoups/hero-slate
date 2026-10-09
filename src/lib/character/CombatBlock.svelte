@@ -7,17 +7,24 @@
 	import { resolveCombatPalette } from '$lib/theme/roles';
 	import { resolvePalette } from '$lib/theme/resolve';
 	import type { PaletteName } from '$lib/theme/palette';
+	import { slug } from '$lib/sheetUi.svelte';
 
-	let { combat, palette }: { combat: unknown; palette?: string } = $props();
+	// `name` lets the same tiles show another group, such as Senses.
+	let {
+		combat,
+		palette,
+		name = 'Combat',
+		block = 'combat'
+	}: { combat: unknown; palette?: string; name?: string; block?: string } = $props();
 
 	const entries: ResolvedCombat[] = $derived(resolveCombat(combat));
 	const fallback: PaletteName = $derived(resolvePalette(palette));
 </script>
 
 {#if entries.length > 0}
-	<section class="combat" aria-label="Combat" data-block="combat">
+	<section class="combat" aria-label={name} data-block={block}>
 		{#each entries as entry}
-			<div class="combat-entry" data-palette={resolveCombatPalette(entry.label, fallback)}>
+			<div class="combat-entry" id={`${block}-${slug(entry.label)}`} data-palette={resolveCombatPalette(entry.label, fallback)}>
 				<span class="label">{entry.label}</span>
 				<span class="value">{entry.value}</span>
 			</div>

@@ -123,7 +123,7 @@ sections:
     color: fire
     rows:
       - title: ⚔️ Attack
-        body: "Tap to pick: Warhammer, Javelin, Fire Breath, or The Earth Shaker"
+        body: "When you take the Attack action you attack twice (Extra Attack). Tap to pick: Warhammer, Javelin, Fire Breath, or The Earth Shaker."
         breakout: attacks
       - title: ✨ Cast a Spell
         body: "Tap to pick a spell — spell attack [[d20+6]], save [[DC 14]]"
@@ -138,10 +138,10 @@ sections:
         body: "Uses 1 Holy Power. Shout a challenge: enemies within 30 feet make a [[DC 14]] Wisdom save or can't move more than 30 feet away from you. Your best first move!"
         pool: holy-power
       - title: 🌊 Turn the Tide
-        body: "Uses 1 Holy Power. When two or more friends are badly hurt, heal all of them at once."
+        body: "Uses 1 Holy Power. Friends within 30 feet who can hear you and have half their hit points or less each heal [[1d6+3]]."
         pool: holy-power
       - title: 🙌 Lay On Hands
-        body: "Touch a friend and heal them with holy light from your big healing pool."
+        body: "Touch a creature (even yourself) and heal any amount from your 35-point pool, or spend 5 points to cure poison."
       - title: 🐉 Dragon Wings
         body: "Sprout dragon wings and fly for 10 minutes! Once per long rest."
         pool: dragon-wings
@@ -192,61 +192,61 @@ spells:
   - title: 🙏 Bless
     level: 1
     url: https://www.dndbeyond.com/spells/2618933-bless
-    body: "Up to three friends add a bonus to their attacks and saves. Your best spell!"
+    body: "Action, 30 feet: up to three friends add [[1d4]] to their attack rolls and saving throws for 1 minute. Concentration. Your best spell!"
   - title: ⚡ Divine Smite
     level: 1
     url: https://www.dndbeyond.com/spells/2618833-divine-smite
     free: divine-smite
-    body: "When you hit, add [[2d8]] holy damage"
+    body: "Bonus action, right after you hit with a melee attack: add [[2d8]] radiant damage (1d8 more against fiends and undead, and 1d8 more with a 2nd-level slot)."
   - title: 💥 Thunderous Smite
     level: 1
     url: https://www.dndbeyond.com/spells/2619182-thunderous-smite
-    body: "Your next hit adds [[2d6]] thunder damage — they make a [[DC 14]] Strength save or get knocked down"
+    body: "Bonus action, right after you hit with a melee attack: add [[2d6]] thunder damage, and they make a [[DC 14]] Strength save or get pushed 10 feet and knocked prone."
   - title: 💖 Cure Wounds
     level: 1
     url: https://www.dndbeyond.com/spells/2619079-cure-wounds
-    body: "Touch a friend to heal [[2d8+3]] hit points"
+    body: "Action, touch: a creature heals [[2d8+3]] hit points (2d8 more with a 2nd-level slot)."
   - title: 🗣️ Command
     level: 1
     url: https://www.dndbeyond.com/spells/2618985-command
-    body: "Give a one-word order like \"Drop!\" or \"Flee!\" — they make a [[DC 14]] Wisdom save"
+    body: "Action, 60 feet: give a one-word order (Approach, Drop, Flee, Grovel, or Halt). They make a [[DC 14]] Wisdom save or obey on their next turn."
   - title: ⚔️ Compelled Duel
     level: 1
     url: https://www.dndbeyond.com/spells/2618990-compelled-duel
-    body: "Dare one enemy to fight only you — they make a [[DC 14]] Wisdom save"
+    body: "Bonus action, 30 feet: one enemy makes a [[DC 14]] Wisdom save or has disadvantage attacking anyone but you and can't move more than 30 feet from you. Concentration, 1 minute. It ends if you attack someone else or a friend hurts that enemy."
   - title: 🌟 Aid
     level: 2
     url: https://www.dndbeyond.com/spells/2618845-aid
-    body: "Cast it after a long rest: three friends get extra hit points all day."
+    body: "Action, 30 feet: up to three friends get 5 more maximum and current hit points for 8 hours. No concentration, so cast it after a long rest!"
   - title: ✨ Lesser Restoration
     level: 2
     url: https://www.dndbeyond.com/spells/2619016-lesser-restoration
-    body: "Cure a friend who is poisoned, paralyzed, blinded, or deafened."
+    body: "Bonus action, touch: end Blinded, Deafened, Paralyzed, or Poisoned on one creature."
   - title: 🤝 Warding Bond
     level: 2
     url: https://www.dndbeyond.com/spells/2619203-warding-bond
-    body: "Protect a friend by sharing their hurts."
+    body: "Action, touch, 1 hour: a willing friend gets +1 to AC and saves and takes only half damage, but every time they take damage, you take the same. Ends if you drop to 0 hit points or get more than 60 feet apart."
   - title: ⚖️ Zone of Truth
     level: 2
     url: https://www.dndbeyond.com/spells/2619221-zone-of-truth
-    body: "Make an area where nobody can lie — they make a [[DC 14]] Charisma save"
+    body: "Action, 60 feet, 10 minutes: a 15-foot circle where anyone inside makes a [[DC 14]] Charisma save or can't tell a lie."
   - title: 🐴 Find Steed
     level: 2
     url: https://www.dndbeyond.com/spells/2618879-find-steed
     free: find-steed
-    body: "Summon a loyal mount to ride into battle."
+    body: "Action, 30 feet: summon your Fey steed, a big loyal mount (AC 12, 25 hit points, speed 60). It attacks with Otherworldly Slam: [[d20+6]] to hit, [[1d8+2]] psychic damage. Once per long rest it can Fey Step: teleport you both up to 60 feet. When a spell heals you, it heals the same amount if it is next to you."
 
 # Attacks for the Attack breakout. Numbers come from D&D Beyond; `pool`
 # spends a use from that pool. The Earth Shaker DC follows the feat's own
 # formula: 8 + proficiency (3) + Strength bonus (5).
 attacks:
   - title: 🔨 Warhammer
-    body: "Smash! [[d20+8]] to hit, [[1d8+5]] damage. Push: knock a hit enemy back 10 feet."
+    body: "Smash! [[d20+8]] to hit, [[1d8+5]] damage. Push: knock a hit enemy (Large or smaller) back 10 feet."
   - title: 🎯 Javelin
-    body: "Throw it up to 30 feet (120 with a harder shot): [[d20+8]] to hit, [[1d6+5]] damage. Slow: a hit enemy moves 10 feet slower. You carry 6."
+    body: "Throw it up to 30 feet (up to 120 with disadvantage): [[d20+8]] to hit, [[1d6+5]] damage. Slow: a hit enemy moves 10 feet slower until your next turn. You carry 6."
   - title: 🔥 Fire Breath
     pool: fire-breath
-    body: "Breathe dragon fire! Enemies make a [[DC 13]] Dexterity save or take [[2d10]] damage."
+    body: "Replaces one of your attacks. Breathe a 15-foot cone or a 30-foot line of fire: everyone in it makes a [[DC 13]] Dexterity save or takes [[2d10]] fire damage (half if they pass)."
   - title: 🌋 The Earth Shaker
     pool: earth-shaker
     body: "Slam your weapon into the ground. Everyone within 10 feet makes a [[DC 16]] Strength save or falls down, and the ground there becomes hard to walk on."

@@ -4,7 +4,9 @@
  * Authored as a top-level `spells` list of `{ title, level, body, free? }`:
  * `level` is the spell level (0 for a cantrip), and `free` optionally names a
  * pool of free casts (such as one free Divine Smite a day). A spell can use any
- * spell-slot pool whose id is `slots-N` with `N` at or above its level.
+ * spell-slot pool whose id is `slots-N` with `N` at or above its level. An
+ * optional `url` (https only) links the spell's name to its full rules, such as
+ * its D&D Beyond page.
  */
 
 export interface ResolvedSpell {
@@ -12,6 +14,18 @@ export interface ResolvedSpell {
 	level: number;
 	body: string;
 	free?: string;
+	url?: string;
+}
+
+/** An https link, or undefined — never a javascript: or other scheme. */
+function httpsUrl(value: unknown): string | undefined {
+	if (typeof value !== 'string') return undefined;
+	try {
+		const url = new URL(value);
+		return url.protocol === 'https:' ? url.href : undefined;
+	} catch {
+		return undefined;
+	}
 }
 
 export interface CastOption {
@@ -29,11 +43,13 @@ export function resolveSpells(spells: unknown): ResolvedSpell[] {
 	if (!Array.isArray(spells)) return [];
 	return spells.flatMap((spell) => {
 		if (!isPlainObject(spell)) return [];
-		const { title, level, body, free } = spell;
+		const { title, level, body, free, url } = spell;
 		if (typeof title !== 'string' || title.trim().length === 0) return [];
 		if (typeof level !== 'number' || !Number.isInteger(level) || level < 0 || level > 9) return [];
 		const resolved: ResolvedSpell = { title, level, body: typeof body === 'string' ? body : '' };
 		if (typeof free === 'string' && free.length > 0) resolved.free = free;
+		const link = httpsUrl(url);
+		if (link) resolved.url = link;
 		return [resolved];
 	});
 }

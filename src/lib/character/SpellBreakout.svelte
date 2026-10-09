@@ -18,7 +18,13 @@
 		{@const options = castOptions(spell, poolIds)}
 		<li class="spell" id={`spell-${slug(spell.title)}`}>
 			<div class="spell-head">
-				<span class="spell-title">{spell.title}</span>
+				{#if spell.url}
+					<a class="spell-title" href={spell.url} target="_blank" rel="noopener noreferrer" title="Open the full spell on D&D Beyond">
+						{spell.title} <span class="external" aria-hidden="true">↗</span>
+					</a>
+				{:else}
+					<span class="spell-title">{spell.title}</span>
+				{/if}
 				<span class="spell-level">{spell.level === 0 ? 'cantrip' : ordinal(spell.level)}</span>
 			</div>
 			{#if spell.body}
@@ -71,6 +77,21 @@
 		font-family: var(--font-display);
 		font-weight: 800;
 		color: var(--deep);
+	}
+
+	a.spell-title {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+
+	a.spell-title:hover {
+		text-decoration-thickness: 2px;
+	}
+
+	.external {
+		font-size: 0.75em;
+		opacity: 0.7;
 	}
 
 	.spell-level {

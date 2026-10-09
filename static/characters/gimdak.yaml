@@ -180,36 +180,47 @@ sections:
 spells:
   - title: 🙏 Bless
     level: 1
+    url: https://www.dndbeyond.com/spells/2618933-bless
     body: "Up to three friends add a bonus to their attacks and saves. Your best spell!"
   - title: ⚡ Divine Smite
     level: 1
+    url: https://www.dndbeyond.com/spells/2618833-divine-smite
     free: divine-smite
     body: "When you hit, add [[2d8]] holy damage"
   - title: 💥 Thunderous Smite
     level: 1
+    url: https://www.dndbeyond.com/spells/2619182-thunderous-smite
     body: "Your next hit adds [[2d6]] thunder damage — they make a [[DC 14]] Strength save or get knocked down"
   - title: 💖 Cure Wounds
     level: 1
+    url: https://www.dndbeyond.com/spells/2619079-cure-wounds
     body: "Touch a friend to heal [[2d8+3]] hit points"
   - title: 🗣️ Command
     level: 1
+    url: https://www.dndbeyond.com/spells/2618985-command
     body: "Give a one-word order like \"Drop!\" or \"Flee!\" — they make a [[DC 14]] Wisdom save"
   - title: ⚔️ Compelled Duel
     level: 1
+    url: https://www.dndbeyond.com/spells/2618990-compelled-duel
     body: "Dare one enemy to fight only you — they make a [[DC 14]] Wisdom save"
   - title: 🌟 Aid
     level: 2
+    url: https://www.dndbeyond.com/spells/2618845-aid
     body: "Cast it after a long rest: three friends get extra hit points all day."
   - title: ✨ Lesser Restoration
     level: 2
+    url: https://www.dndbeyond.com/spells/2619016-lesser-restoration
     body: "Cure a friend who is poisoned, paralyzed, blinded, or deafened."
   - title: 🤝 Warding Bond
     level: 2
+    url: https://www.dndbeyond.com/spells/2619203-warding-bond
     body: "Protect a friend by sharing their hurts."
   - title: ⚖️ Zone of Truth
     level: 2
+    url: https://www.dndbeyond.com/spells/2619221-zone-of-truth
     body: "Make an area where nobody can lie — they make a [[DC 14]] Charisma save"
   - title: 🐴 Find Steed
     level: 2
+    url: https://www.dndbeyond.com/spells/2618879-find-steed
     free: find-steed
     body: "Summon a loyal mount to ride into battle."

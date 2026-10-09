@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import DiceTray from './DiceTray.svelte';
+import ModeToggle from './ModeToggle.svelte';
 import RichText from '$lib/richtext/RichText.svelte';
 import { parse } from '$lib/richtext/parse';
 import { Roller, roller } from './roller.svelte';
@@ -62,10 +63,10 @@ describe('DiceTray', () => {
 		random.mockRestore();
 	});
 
-	it('switches to advantage without opening the tray', async () => {
+	it('switches to advantage from the compact toggle', async () => {
 		const dice = new Roller(() => {}, () => {});
-		render(DiceTray, { props: { dice } });
-		await fireEvent.click(screen.getByRole('radio', { name: '👍 Advantage' }));
+		render(ModeToggle, { props: { dice } });
+		await fireEvent.click(screen.getByRole('radio', { name: 'Advantage' }));
 		expect(dice.mode).toBe('advantage');
 	});
 });

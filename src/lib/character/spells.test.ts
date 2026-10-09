@@ -24,6 +24,17 @@ describe('resolveSpells', () => {
 	});
 });
 
+describe('resolveSpells: links', () => {
+	it('keeps an https link and drops any other scheme', () => {
+		const [good, bad] = resolveSpells([
+			{ title: 'Bless', level: 1, url: 'https://www.dndbeyond.com/spells/2618933-bless' },
+			{ title: 'Bad', level: 1, url: 'javascript:alert(1)' }
+		]);
+		expect(good.url).toBe('https://www.dndbeyond.com/spells/2618933-bless');
+		expect(bad.url).toBeUndefined();
+	});
+});
+
 describe('castOptions', () => {
 	const pools = ['holy-power', 'slots-2', 'slots-1', 'divine-smite'];
 

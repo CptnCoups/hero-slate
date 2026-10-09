@@ -10,6 +10,7 @@
 	import { resolveSections } from '$lib/character/sections';
 	import { resolveSpells } from '$lib/character/spells';
 	import { reveal, sheetUi, slug } from '$lib/sheetUi.svelte';
+	import ModeToggle from '$lib/dice/ModeToggle.svelte';
 
 	let { character }: { character: Character } = $props();
 
@@ -117,15 +118,18 @@
 </script>
 
 <div class="search" data-block="search">
-	<input
-		type="search"
-		placeholder="🔍 Search spells, skills, actions…"
-		aria-label="Search the sheet"
-		aria-controls="sheet-search-results"
-		autocomplete="off"
-		bind:value={query}
-		onkeydown={onKey}
-	/>
+	<div class="line">
+		<input
+			type="search"
+			placeholder="🔍 Search spells, skills, actions…"
+			aria-label="Search the sheet"
+			aria-controls="sheet-search-results"
+			autocomplete="off"
+			bind:value={query}
+			onkeydown={onKey}
+		/>
+		<ModeToggle />
+	</div>
 	{#if query.trim()}
 		<ul id="sheet-search-results" class="results" role="listbox" aria-label="Search results">
 			{#each results as item, i (item.id + item.kind)}
@@ -150,8 +154,16 @@
 		z-index: 20;
 	}
 
+	/* The search box fills the line; the roll mode sits at its right end. */
+	.line {
+		display: flex;
+		gap: var(--space-2);
+		align-items: center;
+	}
+
 	input {
-		inline-size: 100%;
+		flex: 1;
+		min-inline-size: 0;
 		min-block-size: 2.75rem;
 		padding: 0 var(--space-4);
 		border: 2px solid var(--structural);

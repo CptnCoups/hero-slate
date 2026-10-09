@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { roller, type Roller } from './roller.svelte';
-	import type { Mode } from './roll';
 
 	// A bar pinned to the bottom of the sheet: the latest roll, and a tray with
 	// the free dice, advantage, crit, mute, and recent rolls.
@@ -9,11 +8,6 @@
 	let open = $state(false);
 	const latest = $derived(dice.latest);
 	const DIE_SIDES = [4, 6, 8, 10, 12, 20, 100];
-	const MODES: { mode: Mode; label: string }[] = [
-		{ mode: 'disadvantage', label: '👎 Disadvantage' },
-		{ mode: 'normal', label: 'Normal' },
-		{ mode: 'advantage', label: '👍 Advantage' }
-	];
 </script>
 
 <div class="tray" data-block="dice" class:open>
@@ -48,15 +42,6 @@
 			{/if}
 		</div>
 	{/if}
-
-	<!-- Always visible: how the next d20 is rolled. -->
-	<div class="segmented" role="radiogroup" aria-label="d20 rolls" data-mode={dice.mode}>
-		{#each MODES as m}
-			<button type="button" role="radio" aria-checked={dice.mode === m.mode} onclick={() => (dice.mode = m.mode)}>
-				{m.label}
-			</button>
-		{/each}
-	</div>
 
 	<div class="bar">
 		<div class="latest" aria-live="polite">
@@ -218,16 +203,6 @@
 		gap: var(--space-2);
 	}
 
-	/* Three equal parts across the bar, so the choice is always in view. */
-	.segmented {
-		display: grid;
-		grid-template-columns: 1fr auto 1fr;
-		border: 2px solid var(--structural);
-		border-radius: 999px;
-		overflow: hidden;
-	}
-
-	.segmented button,
 	.switch,
 	.die {
 		min-block-size: 2.75rem;
@@ -237,26 +212,6 @@
 		color: inherit;
 		font-weight: 800;
 		cursor: pointer;
-	}
-
-	.segmented button {
-		white-space: nowrap;
-	}
-
-	.segmented button[aria-checked='true'] {
-		background-color: var(--foreground);
-		color: var(--raised);
-	}
-
-	/* Advantage and disadvantage stand out so a stale setting is hard to miss. */
-	.segmented[data-mode='advantage'] button[aria-checked='true'] {
-		background-color: #2f9e57;
-		color: #fff;
-	}
-
-	.segmented[data-mode='disadvantage'] button[aria-checked='true'] {
-		background-color: #c94a43;
-		color: #fff;
 	}
 
 	.switch,

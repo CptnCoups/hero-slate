@@ -113,9 +113,9 @@ pools:
     label: Free Find Steed
     color: neutral
     max: 1
-  - id: fey-step
-    label: Fey Step
-    color: berry
+  - id: healing-touch
+    label: Healing Touch
+    color: sun
     max: 1
   - id: hit-dice
     label: Hit Dice
@@ -237,10 +237,10 @@ spells:
   - title: 🐴 Find Steed
     level: 2
     uses:
-      - { label: "🧚 Fey Step", pool: fey-step }
+      - { label: "😇 Healing Touch", pool: healing-touch }
     url: https://www.dndbeyond.com/spells/2618879-find-steed
     free: find-steed
-    body: "Action, 30 feet: summon your Fey steed, a big loyal mount (AC 12, 25 hit points, speed 60). It attacks with Otherworldly Slam: [[d20+6]] to hit, [[1d8+2]] psychic damage. Once per long rest it can Fey Step: teleport you both up to 60 feet. When a spell heals you, it heals the same amount if it is next to you."
+    body: "Action, 30 feet: summon your Celestial steed, a big loyal mount (AC 12, 25 hit points, speed 60). It attacks with Otherworldly Slam: [[d20+6]] to hit, [[1d8+2]] radiant damage. Once per long rest it can use Healing Touch (a bonus action): one creature within 5 feet of it heals [[2d8+2]]. When a spell heals you, it heals the same amount if it is next to you."
 
 # Attacks for the Attack breakout. Numbers come from D&D Beyond; `pool`
 # spends a use from that pool. The Earth Shaker DC follows the feat's own

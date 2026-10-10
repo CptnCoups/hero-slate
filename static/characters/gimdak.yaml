@@ -113,6 +113,10 @@ pools:
     label: Free Find Steed
     color: neutral
     max: 1
+  - id: fey-step
+    label: Fey Step
+    color: berry
+    max: 1
   - id: hit-dice
     label: Hit Dice
     color: ocean
@@ -232,6 +236,8 @@ spells:
     body: "Action, 60 feet, 10 minutes: a 15-foot circle where anyone inside makes a [[DC 14]] Charisma save or can't tell a lie."
   - title: 🐴 Find Steed
     level: 2
+    uses:
+      - { label: "🧚 Fey Step", pool: fey-step }
     url: https://www.dndbeyond.com/spells/2618879-find-steed
     free: find-steed
     body: "Action, 30 feet: summon your Fey steed, a big loyal mount (AC 12, 25 hit points, speed 60). It attacks with Otherworldly Slam: [[d20+6]] to hit, [[1d8+2]] psychic damage. Once per long rest it can Fey Step: teleport you both up to 60 feet. When a spell heals you, it heals the same amount if it is next to you."

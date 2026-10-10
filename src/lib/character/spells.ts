@@ -15,6 +15,8 @@ export interface ResolvedSpell {
 	body: string;
 	free?: string;
 	url?: string;
+	/** Other things the spell gives, each spending its own pool (the steed's Fey Step). */
+	uses?: { label: string; pool: string }[];
 }
 
 /** An https link, or undefined — never a javascript: or other scheme. */
@@ -43,13 +45,21 @@ export function resolveSpells(spells: unknown): ResolvedSpell[] {
 	if (!Array.isArray(spells)) return [];
 	return spells.flatMap((spell) => {
 		if (!isPlainObject(spell)) return [];
-		const { title, level, body, free, url } = spell;
+		const { title, level, body, free, url, uses } = spell;
 		if (typeof title !== 'string' || title.trim().length === 0) return [];
 		if (typeof level !== 'number' || !Number.isInteger(level) || level < 0 || level > 9) return [];
 		const resolved: ResolvedSpell = { title, level, body: typeof body === 'string' ? body : '' };
 		if (typeof free === 'string' && free.length > 0) resolved.free = free;
 		const link = httpsUrl(url);
 		if (link) resolved.url = link;
+		const extra = Array.isArray(uses)
+			? uses.flatMap((use) =>
+					isPlainObject(use) && typeof use.label === 'string' && use.label.trim() && typeof use.pool === 'string' && use.pool
+						? [{ label: use.label, pool: use.pool }]
+						: []
+				)
+			: [];
+		if (extra.length > 0) resolved.uses = extra;
 		return [resolved];
 	});
 }

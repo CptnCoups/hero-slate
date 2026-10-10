@@ -46,6 +46,22 @@
 					{/each}
 				</div>
 			{/if}
+			{#if spell.uses && counts}
+				<div class="cast" role="group" aria-label={`${spell.title} uses`}>
+					{#each spell.uses.filter((use) => counts.has(use.pool)) as use}
+						{@const left = counts.remaining(use.pool)}
+						<button
+							type="button"
+							data-use={use.label}
+							disabled={left < 1}
+							aria-label={`Use ${use.label} (${left} left)`}
+							onclick={() => counts.spend(use.pool)}
+						>
+							{use.label} ({left})
+						</button>
+					{/each}
+				</div>
+			{/if}
 		</li>
 	{/each}
 </ul>

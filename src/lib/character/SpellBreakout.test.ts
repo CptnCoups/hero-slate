@@ -88,3 +88,20 @@ describe('Cast a Spell breakout', () => {
 		expect(screen.getByText('Cast a Spell')).toBeTruthy();
 	});
 });
+
+describe('Spell extra uses', () => {
+	it("spends the steed's Fey Step from its own pool", async () => {
+		sheetUi.spellsOpen = true;
+		const state = store();
+		const steedSheet = {
+			...character,
+			pools: [...character.pools, { id: 'fey-step', label: 'Fey Step', max: 1 }],
+			spells: [{ title: 'Find Steed', level: 2, uses: [{ label: 'Fey Step', pool: 'fey-step' }] }]
+		};
+		render(CharacterView, { props: { result: { status: 'found', character: steedSheet }, store: state, id: 'gimdak' } });
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Use Fey Step (1 left)' }));
+		expect(screen.getByRole('button', { name: 'Use Fey Step (0 left)' })).toHaveProperty('disabled', true);
+		expect(state.write).toHaveBeenLastCalledWith('gimdak', 'pools', expect.objectContaining({ 'fey-step': 0 }));
+	});
+});

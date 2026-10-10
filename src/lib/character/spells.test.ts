@@ -66,3 +66,12 @@ describe('ordinal', () => {
 		expect([1, 2, 3, 4, 9].map(ordinal)).toEqual(['1st', '2nd', '3rd', '4th', '9th']);
 	});
 });
+
+describe('resolveSpells: extra uses', () => {
+	it('keeps labelled uses with a pool and drops broken ones', () => {
+		const [steed] = resolveSpells([
+			{ title: 'Find Steed', level: 2, uses: [{ label: 'Fey Step', pool: 'fey-step' }, { label: 'No pool' }, 'x'] }
+		]);
+		expect(steed.uses).toEqual([{ label: 'Fey Step', pool: 'fey-step' }]);
+	});
+});
